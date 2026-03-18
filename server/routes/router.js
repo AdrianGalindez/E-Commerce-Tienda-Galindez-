@@ -100,4 +100,14 @@ route.get('/api/ventas', ventaController.find);
 route.delete('/api/ventas/:id', ventaController.delete);
 
 
+// =====================
+// RUTAS PARA FORMULARIOS DE CREACIÓN (ADMIN)
+// =====================
+route.get('/create-categoria', services.create_categoria);
+route.get('/create-marca', services.create_marca);
+route.get('/create-producto', services.create_producto);
+route.get('/create-proveedor', services.create_proveedor);
+route.get('/create-rol', services.create_rol);
+route.get('/admin/ventas', services.ventas);
+
 module.exports = route
