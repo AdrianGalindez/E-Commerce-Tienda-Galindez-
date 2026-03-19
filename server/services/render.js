@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-// Página principal (usuarios)
+// Página principal (clientes)
 exports.homeRoutes = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
@@ -14,11 +14,10 @@ exports.add_user = (req, res) => {
     res.render('add_user');
 };
 
-// ======================
-// CATEGORÍA (GENÉRICA)
-// ======================
 
-// categorias 
+
+
+// categoria dinamica
 exports.categoria = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
@@ -31,9 +30,8 @@ exports.categoria = (req, res) => {
 };
 
 
-// ======================
+
 // MARCAS
-// ======================
 exports.marcas = (req, res) => {
     axios.get('http://localhost:3000/api/marcas')
         .then(response => {
@@ -43,9 +41,8 @@ exports.marcas = (req, res) => {
 };
 
 
-// ======================
+
 // PROMOCIONES
-// ======================
 exports.promociones = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
@@ -56,17 +53,15 @@ exports.promociones = (req, res) => {
 };
 
 
-// ======================
+
 // CARRITO
-// ======================
 exports.carrito = (req, res) => {
     res.render('carrito');
 };
 
 
-// ======================
+
 // ACTUALIZAR USUARIO
-// ======================
 exports.update_user = (req, res) => {
     axios.get('http://localhost:3000/api/users', { params: { id: req.query.id } })
         .then(userdata => {
@@ -76,9 +71,7 @@ exports.update_user = (req, res) => {
 };
 
 
-// ======================
 // ADMIN CREACIÓN
-// ======================
 exports.create_categoria = (req, res) => {
     res.render('create_categoria');
 };
@@ -111,9 +104,8 @@ exports.create_rol = (req, res) => {
 };
 
 
-// ======================
+
 // VENTAS
-// ======================
 exports.ventas = (req, res) => {
     axios.get('http://localhost:3000/api/ventas')
         .then(response => {
