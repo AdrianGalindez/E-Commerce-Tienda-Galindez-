@@ -4,7 +4,7 @@ const axios = require('axios');
 exports.homeRoutes = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
-            res.render('index', { users: response.data });
+            res.render('index', { productos: response.data });
         })
         .catch(err => res.send(err));
 };
