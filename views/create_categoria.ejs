@@ -15,7 +15,7 @@
                         <div class="alert alert-success"><%= success %></div>
                     <% } %>
                     
-                    <form action="/admin/categorias/guardar" method="POST">
+                    <form action="/create-categoria" method="POST">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre de la categoría</label>
                             <input type="text" class="form-control" id="nombre" name="nombre" required autofocus>
@@ -23,7 +23,6 @@
                         </div>
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Guardar Categoría</button>
-                            <a href="/admin/categorias" class="btn btn-secondary">Cancelar</a>
                         </div>
                     </form>
                 </div>
