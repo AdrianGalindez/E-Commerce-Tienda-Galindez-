@@ -60,6 +60,7 @@ exports.carrito = (req, res) => {
 };
 
 
+// ===============================ADMIN==============================
 
 // ACTUALIZAR USUARIO
 exports.update_user = (req, res) => {
@@ -80,7 +81,7 @@ exports.create_marca = (req, res) => {
     res.render('create_marca');
 };
 
-// no entiendo esta linea
+// crear producto
 exports.create_producto = (req, res) => {
     Promise.all([
         axios.get('http://localhost:3000/api/categorias'),
@@ -95,10 +96,14 @@ exports.create_producto = (req, res) => {
     .catch(err => res.send(err));
 };
 
+
+// crear proveedor 
 exports.create_proveedor = (req, res) => {
     res.render('create_proveedor');
 };
 
+
+// crear rol 
 exports.create_rol = (req, res) => {
     res.render('create_rol');
 };
