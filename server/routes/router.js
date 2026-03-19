@@ -27,8 +27,6 @@ route.put('/api/users/:id', userController.update);
 route.delete('/api/users/:id', userController.delete);
 
 
-
-
 //========================API PRODUCTOS=================
 route.post('/api/productos', productoController.create);
 route.get('/api/productos', productoController.find);
