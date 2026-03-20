@@ -11,7 +11,7 @@ exports.homeRoutes = (req, res) => {
 
 
 // categoria dinamica
-exports.categoria = (req, res) => {
+exports.category = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
             const productos = response.data.filter(p => 
@@ -25,7 +25,7 @@ exports.categoria = (req, res) => {
 
 
 // MARCAS
-exports.marcas = (req, res) => {
+exports.brand = (req, res) => {
     axios.get('http://localhost:3000/api/marcas')
         .then(response => {
             res.render('marcas', { marcas: response.data });
@@ -36,7 +36,7 @@ exports.marcas = (req, res) => {
 
 
 // PROMOCIONES
-exports.promociones = (req, res) => {
+exports.promotion = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
             const productos = response.data.filter(p => p.stock > 20);
@@ -49,7 +49,7 @@ exports.promociones = (req, res) => {
 
 
 // CARRITO
-exports.carrito = (req, res) => {
+exports.car = (req, res) => {
     res.render('carrito');
 };
 
@@ -72,17 +72,17 @@ exports.update_user = (req, res) => {
 };
 
 // ADMIN CREACIÓN
-exports.create_categoria = (req, res) => {
+exports.create_category = (req, res) => {
     res.render('create_categoria');
 };
 
 //CREAR MARCA 
-exports.create_marca = (req, res) => {
+exports.create_brand = (req, res) => {
     res.render('create_marca');
 };
 
 // CREAR PRODUCTO
-exports.create_producto = (req, res) => {
+exports.create_product = (req, res) => {
     Promise.all([
         axios.get('http://localhost:3000/api/categorias'),
         axios.get('http://localhost:3000/api/marcas')
@@ -97,7 +97,7 @@ exports.create_producto = (req, res) => {
 };
 
 // CREAR PROVEEDOR
-exports.create_proveedor = (req, res) => {
+exports.create_provider = (req, res) => {
     res.render('create_proveedor');
 };
 
@@ -107,7 +107,7 @@ exports.create_rol = (req, res) => {
 };
 
 // VER VENTAS
-exports.ventas = (req, res) => {
+exports.sales = (req, res) => {
     axios.get('http://localhost:3000/api/ventas')
         .then(response => {
             res.render('ventas', { ventas: response.data });
