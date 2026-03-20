@@ -1,18 +1,18 @@
-var DetalleVentadb = require('../model/saleDetail');
+var SaleDetaildb = require('../model/saleDetail');
 
 // =======================
 // CREATE
 // =======================
 exports.create = (req, res) => {
 
-    const detalle = new DetalleVentadb({
+    const detail = new SaleDetaildb({
         venta: req.body.venta,
         producto: req.body.producto,
         cantidad: req.body.cantidad,
         precioUnitario: req.body.precioUnitario
     });
 
-    detalle.save()
+    detail.save()
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err));
 }
@@ -23,7 +23,7 @@ exports.create = (req, res) => {
 // =======================
 exports.find = (req, res) => {
 
-    DetalleVentadb.find()
+    SaleDetaildb.find()
         .populate('venta')
         .populate('producto')
         .then(data => res.send(data))
@@ -36,7 +36,7 @@ exports.find = (req, res) => {
 // =======================
 exports.update = (req, res) => {
 
-    DetalleVentadb.findByIdAndUpdate(req.params.id, req.body)
+    SaleDetaildb.findByIdAndUpdate(req.params.id, req.body)
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err));
 }
