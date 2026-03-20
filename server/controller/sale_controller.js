@@ -1,23 +1,23 @@
-var Ventadb = require('../model/venta');
+var Saledb = require('../model/venta');
 
 exports.create = (req,res)=>{
-    const venta = new Ventadb({
+    const Sale = new Saledb({
         total : req.body.total
     });
 
-    venta.save()
+    Sale.save()
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err))
 }
 
 exports.find = (req,res)=>{
-    Ventadb.find()
+    Saledb.find()
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err))
 }
 
 exports.delete = (req,res)=>{
-    Ventadb.findByIdAndDelete(req.params.id)
+    Saledb.findByIdAndDelete(req.params.id)
         .then(data => res.send({ message : "Venta eliminada"}))
         .catch(err => res.status(500).send(err))
 }
