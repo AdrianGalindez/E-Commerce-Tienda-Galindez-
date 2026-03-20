@@ -9,6 +9,9 @@ var schema = new mongoose.Schema({
     descripcion: {
         type: String,
     },
+    foto: {
+        type: String,
+    },
     marca: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'marcadb',
