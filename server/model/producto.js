@@ -6,7 +6,9 @@ var schema = new mongoose.Schema({
         type: String,
         required: true
     },
-
+    descripcion: {
+        type: String,
+    },
     marca: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'marcadb',
