@@ -5,11 +5,11 @@ const services = require('../services/render');
 
 // controladores de la aplicación
 const userController = require('../controller/user_controller');
-const productoController = require('../controller/producto_controller');
-const categoriaController = require('../controller/categoria_controller');
-const marcaController = require('../controller/marca_controller');
-const ventaController = require('../controller/venta_controller');
-const proveedorController = require('../controller/proveedor_controller');
+const productoController = require('../controller/product_controller');
+const categoriaController = require('../controller/category_controller');
+const marcaController = require('../controller/brand_controller');
+const ventaController = require('../controller/sale_controller');
+const proveedorController = require('../controller/provider_controller');
 const rolController = require('../controller/rol_controller');
 const detailSalesController = require('../controller/detailSales_controller');
 
