@@ -53,7 +53,6 @@ exports.brands = (req, res) => {
 };
 
 
-
 // ==================== PRODUCTOS ========================
 exports.create_product = (req, res) => {
     axios.post('http://localhost:3000/api/productos', req.body)
@@ -273,7 +272,7 @@ exports.create_sale_form = (req, res) => {
         axios.get('http://localhost:3000/api/users')
     ])
     .then(([productosRes, usersRes]) => {
-        res.render('create-ventas-form', { 
+        res.render('create_ventas', { 
             productos: productosRes.data, 
             users: usersRes.data 
         });
