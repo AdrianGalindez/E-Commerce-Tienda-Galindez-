@@ -5,11 +5,11 @@ const services = require('../services/render');
 
 // controladores de la aplicación
 const userController = require('../controller/user_controller');
-const productoController = require('../controller/product_controller');
-const categoriaController = require('../controller/category_controller');
-const marcaController = require('../controller/brand_controller');
-const ventaController = require('../controller/sale_controller');
-const proveedorController = require('../controller/provider_controller');
+const productController = require('../controller/product_controller');
+const categoryController = require('../controller/category_controller');
+const brandController = require('../controller/brand_controller');
+const saleController = require('../controller/sale_controller');
+const providerController = require('../controller/provider_controller');
 const rolController = require('../controller/rol_controller');
 const detailSalesController = require('../controller/detailSales_controller');
 
@@ -30,37 +30,37 @@ route.delete('/api/users/:id', userController.delete);
 
 
 //========================API PRODUCTOS=================
-route.post('/api/productos', productoController.create);
-route.get('/api/productos', productoController.find);
-route.put('/api/productos/:id', productoController.update);
-route.delete('/api/productos/:id', productoController.delete);
+route.post('/api/productos', productController.create);
+route.get('/api/productos', productController.find);
+route.put('/api/productos/:id', productController.update);
+route.delete('/api/productos/:id', productController.delete);
 
 
 //========================API CATEGORIAS=================
-route.post('/api/categorias', categoriaController.create);
-route.get('/api/categorias', categoriaController.find);
-route.put('/api/categorias/:id', categoriaController.update);
-route.delete('/api/categorias/:id', categoriaController.delete);
+route.post('/api/categorias', categoryController.create);
+route.get('/api/categorias', categoryController.find);
+route.put('/api/categorias/:id', categoryController.update);
+route.delete('/api/categorias/:id', categoryController.delete);
 
 
 //========================API MARCAS=================
-route.post('/api/marcas', marcaController.create);
-route.get('/api/marcas', marcaController.find);
-route.put('/api/marcas/:id', marcaController.update);
-route.delete('/api/marcas/:id', marcaController.delete);
+route.post('/api/marcas', brandController.create);
+route.get('/api/marcas', brandController.find);
+route.put('/api/marcas/:id', brandController.update);
+route.delete('/api/marcas/:id', brandController.delete);
 
 
 //========================API PROVEEDOR=================
-route.post('/api/proveedores', proveedorController.create);
-route.get('/api/proveedores', proveedorController.find);
-route.put('/api/proveedores/:id', proveedorController.update);
-route.delete('/api/proveedores/:id', proveedorController.delete);
+route.post('/api/proveedores', providerController.create);
+route.get('/api/proveedores', providerController.find);
+route.put('/api/proveedores/:id', providerController.update);
+route.delete('/api/proveedores/:id', providerController.delete);
 
 
 //========================API VENTA=================
-route.post('/api/ventas', ventaController.create);
-route.get('/api/ventas', ventaController.find);
-route.delete('/api/ventas/:id', ventaController.delete);
+route.post('/api/ventas', saleController.create);
+route.get('/api/ventas', saleController.find);
+route.delete('/api/ventas/:id', saleController.delete);
 
 
 //========================API ROLES=================
