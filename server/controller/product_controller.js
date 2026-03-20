@@ -1,4 +1,4 @@
-var Productodb = require('../model/producto');
+var Productdb = require('../model/producto');
 
 // create
 exports.create = (req,res)=>{
@@ -6,7 +6,7 @@ exports.create = (req,res)=>{
         return res.status(400).send({ message : "Content empty"});
     }
 
-    const producto = new Productodb({
+    const product = new Productdb({
         nombre : req.body.nombre,
         marca : req.body.marca,
         categoria : req.body.categoria,
@@ -15,7 +15,7 @@ exports.create = (req,res)=>{
         stock : req.body.stock
     });
 
-    producto.save()
+    product.save()
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err));
 }
@@ -23,14 +23,14 @@ exports.create = (req,res)=>{
 // find
 exports.find = (req,res)=>{
     if(req.query.id){
-        Productodb.findById(req.query.id)
+        Productdb.findById(req.query.id)
             .populate('marca')
             .populate('categoria')
             .populate('proveedor')
             .then(data => res.send(data))
             .catch(err => res.status(500).send(err))
     }else{
-        Productodb.find()
+        Productdb.find()
             .populate('marca')
             .populate('categoria')
             .populate('proveedor')
@@ -41,7 +41,7 @@ exports.find = (req,res)=>{
 
 // update
 exports.update = (req,res)=>{
-    Productodb.findByIdAndUpdate(req.params.id, req.body)
+    Productdb.findByIdAndUpdate(req.params.id, req.body)
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err))
 }
