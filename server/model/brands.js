@@ -12,4 +12,4 @@ var schema = new mongoose.Schema({
 
 const Marcadb = mongoose.model('marcadb', schema);
 
-module.exports = Marcadb;
+module.exports = Brand_db;
