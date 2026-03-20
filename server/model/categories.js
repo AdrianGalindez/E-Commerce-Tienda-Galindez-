@@ -12,4 +12,4 @@ var schema = new mongoose.Schema({
 
 const Categoriadb = mongoose.model('categoriadb', schema);
 
-module.exports = Categoriadb;
+module.exports = Categoryadb;
