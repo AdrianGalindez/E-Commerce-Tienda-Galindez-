@@ -1,29 +1,29 @@
 var Brand_db = require('../model/marca');
 
 exports.create = (req,res)=>{
-    const marca = new Marcadb({
+    const marca = new Brand_db({
         nombre : req.body.nombre
     });
 
-    marca.save()
+    Brand_db.save()
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err))
 }
 
 exports.find = (req,res)=>{
-    Marcadb.find()
+    Brand_db.find()
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err))
 }
 
 exports.update = (req,res)=>{
-    Marcadb.findByIdAndUpdate(req.params.id, req.body)
+    Brand_db.findByIdAndUpdate(req.params.id, req.body)
         .then(data => res.send(data))
         .catch(err => res.status(500).send(err))
 }
 
 exports.delete = (req,res)=>{
-    Marcadb.findByIdAndDelete(req.params.id)
+    Brand_db.findByIdAndDelete(req.params.id)
         .then(data => res.send({ message : "Marca eliminada"}))
         .catch(err => res.status(500).send(err))
 }
