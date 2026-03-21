@@ -14,7 +14,7 @@ var schema = new mongoose.Schema({
     },    
     marca: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'saledb',
+        ref: 'branddb',
         required: true
     },
     categoria: {

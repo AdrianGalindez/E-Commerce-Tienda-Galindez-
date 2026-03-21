@@ -80,26 +80,23 @@ route.get('/categoria/:nombre', services.category); // ruta de catergorias dinam
 
 
 //========================Rutas del admin=================
-route.get('/create-categoria', services.create_category);
+route.get('/create-categoria', services.create_category_form);
 route.post('/create-categoria', services.create_category);
 route.get('/read-categoria', services.read_categories);
 route.post('/read-categoria', services.read_categories);
 route.get('/update-categoria', services.read_categories);
 route.post('/update-categoria', services.read_categories);
-route.get('/create-categoria', services.create_category_form);
 
 
-route.post('/create-marca', services.create_brand);
-route.get('/create-marca', services.create_brand);
-route.post('/read-marca', services.read_brands);
-route.get('/read-marca', services.read_brands);
-route.post('/update-marca', services.read_brands);
-route.get('/update-marca', services.read_brands);
 route.get('/create-marca', services.create_brand_form);
+route.post('/create-marca', services.create_brand);
+route.get('/read-marca', services.read_brands);
+route.get('/update-marca', services.update_brand);
+route.post('/update-marca', services.update_brand);
 
 
+// route.get('/create-product', services.create_product_form);
 route.post('/create-producto', services.create_product);
-route.get('/create-producto', services.create_product);
 route.get('/read-producto', services.read_products);
 route.post('/read-producto', services.read_products);
 route.get('/update-producto', services.read_products);
@@ -108,13 +105,12 @@ route.get('/create-producto', services.create_product_form);
 
 
 // Mostrar formulario de creación
-route.get('/create-product', services.create_product_form);
+route.get('/create-proveedor', services.create_provider_form);
 route.post('/create-proveedor', services.create_provider);
-route.get('/create-proveedor', services.create_provider);
 route.get('/read-proveedor', services.read_providers);
-route.post('/read-proveedor', services.create_provider);
-route.get('/update-proveedor', services.read_providers);
-route.post('/update-proveedor', services.create_provider);
+route.post('/read-proveedor', services.read_providers);
+route.get('/update-proveedor', services.update_provider);
+route.post('/update-proveedor', services.update_provider);
 
 
 route.post('/create-rol', services.create_rol);

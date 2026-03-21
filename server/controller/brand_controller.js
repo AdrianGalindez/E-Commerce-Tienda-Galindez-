@@ -5,7 +5,7 @@ exports.create = (req,res)=>{
         nombre : req.body.nombre
     });
 
-    Brand_db.save()
+    marca.save()
         .then(data => {
             res.redirect('/create-marca');
         })
