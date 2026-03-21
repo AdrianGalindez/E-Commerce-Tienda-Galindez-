@@ -1,61 +1,124 @@
-var Userdb = require('../model/user');
+const Userdb = require('../model/user');
 
-// create
-exports.create = (req,res)=>{
-    if(!req.body){
-        return res.status(400).send({ message : "Content can not be empty!"});
-    }
+// ========================
+// CREATE USER
+// ========================
+exports.create = async (req, res) => {
+    try {
+        let { nombre, email, telefono, direccion, genero, barrio, ciudad, puntoReferencia, ubicacion } = req.body;
 
-    const user = new Userdb({
-        nombre : req.body.nombre,
-        email : req.body.email,
-        telefono : req.body.telefono,
-        genero : req.body.genero,
-        direccion : req.body.direccion,
-        barrio : req.body.barrio,
-        ciudad : req.body.ciudad,
-        puntoReferencia : req.body.puntoReferencia,
-        ubicacion : reqq.body.ubicacion,
-        estado : req.body.estado,
-        fechaRegistro : req.body.fechaRegistro,
-    });
+        // Validar campos obligatorios
+        if (!nombre || !email || !telefono || !direccion) {
+            return res.status(400).json({ message: "Nombre, email, teléfono y dirección son obligatorios." });
+        }
 
-    user.save()
-        .then(data => res.send(data))
-        .catch(err =>{
-            res.status(500).send({
-                message : err.message || "Error creating user"
-            });
+        // Normalizar email
+        email = email.toLowerCase();
+
+        // Validar formato de email simple
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Email inválido." });
+        }
+
+        // Validar teléfono simple (solo números y mínimo 7 dígitos)
+        const telefonoRegex = /^\d{7,15}$/;
+        if (!telefonoRegex.test(telefono)) {
+            return res.status(400).json({ message: "Teléfono inválido. Debe tener solo números y al menos 7 dígitos." });
+        }
+
+        // Validar ubicación
+        if (ubicacion) {
+            const { lat, lng } = ubicacion;
+            if (lat == null || lng == null) {
+                return res.status(400).json({ message: "Ubicación incompleta. Debe incluir lat y lng." });
+            }
+        }
+
+        const user = new Userdb({
+            nombre,
+            email,
+            telefono,
+            genero,
+            direccion,
+            barrio,
+            ciudad: ciudad || "Bogotá",
+            puntoReferencia,
+            ubicacion,
+            estado: "Activo"
         });
-}
 
-// find
-exports.find = (req, res)=>{
-    if(req.query.id){
-        Userdb.findById(req.query.id)
-            .then(data => res.send(data))
-            .catch(err => res.status(500).send(err))
-    }else{
-        Userdb.find()
-            .then(data => res.send(data))
-            .catch(err => res.status(500).send(err))
+        const data = await user.save();
+        res.status(201).json(data);
+
+    } catch (err) {
+        if (err.code === 11000) {
+            return res.status(400).json({ message: "El email ya existe." });
+        }
+        res.status(500).json({ message: err.message || "Error creando el usuario." });
     }
-}
+};
 
-// update
-exports.update = (req, res)=>{
-    if(!req.body){
-        return res.status(400).send({ message : "Data empty"});
+// ========================
+// FIND USERS
+// ========================
+exports.find = async (req, res) => {
+    try {
+        if (req.params.id) {
+            const data = await Userdb.findById(req.params.id);
+            if (!data) return res.status(404).json({ message: "Usuario no encontrado." });
+            return res.json(data);
+        } else {
+            const users = await Userdb.find({ estado: "Activo" }); // Solo activos
+            return res.json(users);
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message || "Error al obtener los usuarios." });
     }
+};
 
-    Userdb.findByIdAndUpdate(req.params.id, req.body)
-        .then(data => res.send(data))
-        .catch(err => res.status(500).send(err))
-}
+// ========================
+// UPDATE USER
+// ========================
+exports.update = async (req, res) => {
+    try {
+        if (!req.body || Object.keys(req.body).length === 0) {
+            return res.status(400).json({ message: "Datos vacíos, nada que actualizar." });
+        }
 
-// delete
-exports.delete = (req, res)=>{
-    Userdb.findByIdAndDelete(req.params.id)
-        .then(data => res.send({ message : "User deleted"}))
-        .catch(err => res.status(500).send(err))
-}
+        // Solo permitir ciertos campos para actualizar
+        const allowedFields = ['nombre', 'telefono', 'direccion', 'genero', 'barrio', 'ciudad', 'puntoReferencia', 'ubicacion', 'estado'];
+        const updateData = {};
+        for (let key of allowedFields) {
+            if (req.body[key] !== undefined) updateData[key] = req.body[key];
+        }
+
+        // Normalizar email si se actualiza (opcional)
+        if (req.body.email) updateData.email = req.body.email.toLowerCase();
+
+        const data = await Userdb.findByIdAndUpdate(req.params.id, { $set: updateData }, { new: true });
+        if (!data) return res.status(404).json({ message: "Usuario no encontrado." });
+
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ message: err.message || "Error actualizando el usuario." });
+    }
+};
+
+// ========================
+// DELETE USER (BORRADO LÓGICO)
+// ========================
+exports.delete = async (req, res) => {
+    try {
+        const data = await Userdb.findByIdAndUpdate(
+            req.params.id,
+            { $set: { estado: "Inactivo" } },
+            { new: true }
+        );
+        if (!data) return res.status(404).json({ message: "Usuario no encontrado." });
+
+        res.json({ message: "Usuario marcado como inactivo." });
+    } catch (err) {
+        res.status(500).json({ message: err.message || "Error eliminando el usuario." });
+    }
+};

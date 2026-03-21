@@ -7,13 +7,15 @@ const path = require('path');
 
 const connectDB = require('./server/database/connection');
 
+dotenv.config( { path : 'config.env'} )
 const app = express();
 app.use(express.json());
+// parse request to body-parser
 app.use(bodyparser.urlencoded({ extended : true}))
 console.log("TODAS LAS ENV:", process.env)
 console.log("MONGO:", process.env.MONGO_URI)
 console.log("DB:", process.env.DB_URI)
-dotenv.config( { path : 'config.env'} )
+
 const PORT = process.env.PORT || 8080
 
 // log requests
@@ -22,8 +24,7 @@ app.use(morgan('tiny'));
 // mongodb connection
 connectDB();
 
-// parse request to body-parser
-app.use(bodyparser.urlencoded({ extended : true}))
+
 
 // set view engine
 app.set("view engine", "ejs")

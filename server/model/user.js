@@ -37,14 +37,13 @@ var schema = new mongoose.Schema({
     },
 
     puntoReferencia : {
-        type: String
-        // Ej: "Casa azul frente a la panadería"
+        type: String,
     },
 
     ubicacion : {
         lat: Number,
         lng: Number
-        // para mapas o domicilios inteligentes
+       
     },
 
     estado : {
@@ -59,7 +58,6 @@ var schema = new mongoose.Schema({
 
 })
 
-// const Userdb = mongoose.model('userdb', schema);
-const Userdb = mongoose.models.userdb || mongoose.model('userdb', schema);
+const Userdb = mongoose.model('userdb', schema);
 
 module.exports = Userdb;

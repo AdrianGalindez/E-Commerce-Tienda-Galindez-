@@ -19,6 +19,7 @@ const detailSalesController = require('../controller/detailSales_controller');
 //=======================API USERS====================
 route.post('/api/users', userController.create);
 route.get('/api/users', userController.find);
+route.get('/api/users/:id', userController.find);
 route.put('/api/users/:id', userController.update);
 route.delete('/api/users/:id', userController.delete);
 
@@ -95,7 +96,6 @@ route.get('/update-marca', services.update_brand);
 route.post('/update-marca', services.update_brand);
 
 
-// route.get('/create-product', services.create_product_form);
 route.post('/create-producto', services.create_product);
 route.get('/read-producto', services.read_products);
 route.post('/read-producto', services.read_products);

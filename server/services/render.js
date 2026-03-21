@@ -58,7 +58,7 @@ exports.brands = (req, res) => {
 exports.create_product = (req, res) => {
     axios.post('http://localhost:3000/api/productos', req.body)
         .then(response => {
-            console.log("PRODUCTO:", req.body);
+            console.log("PRODUCTO======================:", req.body);
             res.redirect('/create-producto');
         })
         .catch(err => res.send(err));
@@ -230,38 +230,39 @@ exports.update_provider = (req, res) => {
 
 
 // ==================== USUARIOS =========================
-exports.create_user_form = (req, res) => {
-    // opcional: si tienes roles, puedes traerlos para un select
-    axios.get('http://localhost:3000/api/roles')
-        .then(response => {
-            console.log(req.body);
-            res.render('add_user', { roles: response.data });
-        })
-        .catch(err => res.send(err));
+exports.create_user_form = async (req, res) => {
+    try {
+        const rolesRes = await axios.get('http://localhost:3000/api/roles');
+        res.render('add_user', { roles: rolesRes.data });
+    } catch (err) { res.send(err); }
 };
 
+exports.add_user = async (req, res) => {
+    try {
+        if (!req.body.nombre || !req.body.email || !req.body.telefono || !req.body.direccion) {
+            return res.status(400).json({ message: "Nombre, email, teléfono y dirección son obligatorios." });
+        }
 
-exports.add_user = (req, res) => {
-    console.log("user:",req.body);
-    res.render('add_user'); 
+        await axios.post('http://localhost:3000/api/users', req.body);
+        res.redirect('/read-user');
+    } catch (err) {
+        console.log(err.response?.data || err.message);
+        res.status(500).send(err.response?.data || err.message);
+    }
 };
 
-
-exports.read_users = (req, res) => {
-    axios.get('http://localhost:3000/api/users')
-        .then(response => {
-            res.render('read_users', { users: response.data });
-        })
-        .catch(err => res.send(err));
+exports.read_users = async (req, res) => {
+    try {
+        const response = await axios.get('http://localhost:3000/api/users');
+        res.render('read_users', { users: response.data });
+    } catch (err) { res.send(err); }
 };
 
-
-exports.update_user = (req, res) => {
-    axios.get('http://localhost:3000/api/users', { params: { id: req.query.id } })
-        .then(userdata => {
-            res.render('update_user', { user: userdata.data });
-        })
-        .catch(err => res.send(err));
+exports.update_user = async (req, res) => {
+    try {
+        const response = await axios.get('http://localhost:3000/api/users/' + req.params.id);
+        res.render('update_user', { user: response.data });
+    } catch (err) { res.send(err); }
 };
 
 
