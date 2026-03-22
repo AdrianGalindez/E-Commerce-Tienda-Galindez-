@@ -33,7 +33,7 @@ var schema = new mongoose.Schema({
 
     ciudad : {
         type: String,
-        default: "Bogotá"
+        default: "Timbio"
     },
 
     puntoReferencia : {

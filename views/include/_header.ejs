@@ -26,25 +26,24 @@
             <i class="bi bi-grid"></i> Categorias
           </a>
           <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#"><i class="bi bi-grid"></i> Categorias</a></li>
-                
-                <li><a class="dropdown-item" href="/categoria/granos"><i class="bi bi-basket"></i> Granos</a></li>
-                
-                <li><a class="dropdown-item" href="/categoria/confiteria"><i class="bi bi-cake2"></i> Confiteria y Dulceria</a></li>
-                
-                <li><a class="dropdown-item" href="/categoria/bebidas"><i class="bi bi-cup-straw"></i> Bebidas</a></li>
-                
-                <li><a class="dropdown-item" href="/categoria/papeleria"><i class="bi bi-pencil"></i> Papeleria y miscelania</a></li>
-                
-                <li><a class="dropdown-item" href="/categoria/aseo"><i class="bi bi-bucket"></i> Productos de aseo</a></li>
-                
-                <li><a class="dropdown-item" href="/categoria/verduras"><i class="bi bi-apple"></i> Verduras Frutas y vegetales</a></li>
-                
-                <li><a class="dropdown-item" href="/categoria/medicina"><i class="bi bi-capsule"></i> Medicina</a></li>
-                
-                <li><hr class="dropdown-divider"></li>
-                
-                <li><a class="dropdown-item" href="/otros"><i class="bi bi-box"></i> Otros</a></li>
+              <li>
+                  <a class="dropdown-item" href="#"><i class="bi bi-grid"></i> Categorias</a>
+              </li>
+
+              <% if (categorias && categorias.length > 0) { %>
+
+                  <% categorias.forEach(cat => { %>
+                      <li>
+                          <a class="dropdown-item" href="/categoria/<%= encodeURIComponent(cat.nombre) %>"><i class="bi bi-tag"></i> <%= cat.nombre %></a>
+                      </li>
+              <% }) %>
+              <% } else { %>
+                  <li><a class="dropdown-item text-danger">No hay categorías</a></li>
+              <% } %>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                  <a class="dropdown-item" href="/otros"><i class="bi bi-box"></i> Otros</a>
+              </li>
           </ul>
         </li>
         <li class="nav-item">

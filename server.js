@@ -7,6 +7,7 @@ const path = require('path');
 
 const connectDB = require('./server/database/connection');
 
+const Categorydb = require('./server/model/categories');
 dotenv.config( { path : 'config.env'} )
 const app = express();
 app.use(express.json());
@@ -24,7 +25,17 @@ app.use(morgan('tiny'));
 // mongodb connection
 connectDB();
 
-
+//  categorias disponibles en TODAS las vistas
+app.use(async (req, res, next) => {
+    try {
+        const categorias = await Categorydb.find();
+        res.locals.categorias = categorias; 
+        next();
+    } catch (error) {
+        console.error(error);
+        next();
+    }
+});
 
 // set view engine
 app.set("view engine", "ejs")
@@ -37,5 +48,7 @@ app.use('/js', express.static(path.resolve(__dirname, "assets/js")))
 
 // load routers
 app.use('/', require('./server/routes/router'))
+
+
 
 app.listen(PORT, ()=> { console.log(`Server is running on http://localhost:${PORT}`)});

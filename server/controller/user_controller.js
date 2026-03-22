@@ -1,10 +1,11 @@
 const Userdb = require('../model/user');
 
-// ========================
+
 // CREATE USER
-// ========================
+
 exports.create = async (req, res) => {
     try {
+        console.log("Creando usuario con datos:", req.body);
         let { nombre, email, telefono, direccion, genero, barrio, ciudad, puntoReferencia, ubicacion } = req.body;
 
         // Validar campos obligatorios
@@ -42,7 +43,7 @@ exports.create = async (req, res) => {
             genero,
             direccion,
             barrio,
-            ciudad: ciudad || "Bogotá",
+            ciudad: ciudad || "Timbio",
             puntoReferencia,
             ubicacion,
             estado: "Activo"
@@ -59,9 +60,8 @@ exports.create = async (req, res) => {
     }
 };
 
-// ========================
 // FIND USERS
-// ========================
+
 exports.find = async (req, res) => {
     try {
         if (req.params.id) {
@@ -77,9 +77,7 @@ exports.find = async (req, res) => {
     }
 };
 
-// ========================
 // UPDATE USER
-// ========================
 exports.update = async (req, res) => {
     try {
         if (!req.body || Object.keys(req.body).length === 0) {
@@ -105,9 +103,7 @@ exports.update = async (req, res) => {
     }
 };
 
-// ========================
 // DELETE USER (BORRADO LÓGICO)
-// ========================
 exports.delete = async (req, res) => {
     try {
         const data = await Userdb.findByIdAndUpdate(

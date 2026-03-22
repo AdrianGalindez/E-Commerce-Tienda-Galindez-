@@ -14,18 +14,40 @@ exports.homeRoutes = (req, res) => {
 };
 
 
-// Categoría dinámica
+// // Categoría dinámica
+// exports.category = (req, res) => {
+//     axios.get('http://localhost:3000/api/productos')
+//         .then(response => {
+//             const productos = response.data.filter(p => 
+//                 p.categoria?.nombre === req.params.nombre,
+//                 console.log("CATEGORIA:", req.params.nombre)
+//             );
+//             console.log("CATEGORIA:", req.params.nombre);
+//             res.render('categories', { productos });
+//         })
+//         .catch(err => res.send(err));
+// };
 exports.category = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
-            const productos = response.data.filter(p => 
+
+            const data = response.data;
+
+            // 1️Filtrar productos
+            const productos = data.filter(p => 
                 p.categoria?.nombre === req.params.nombre
             );
-            res.render('/create-categoria', { productos });
+
+            // Obtener el primero (para título)
+            const categoria = productos.length > 0 
+                ? productos[0].categoria 
+                : null;
+
+            res.render('categories', { productos, categoria });
+
         })
         .catch(err => res.send(err));
 };
-
 
 // Promociones
 exports.promotions = (req, res) => {

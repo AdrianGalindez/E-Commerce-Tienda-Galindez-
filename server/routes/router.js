@@ -130,9 +130,9 @@ route.get('/update-ventas', services.sales);
 route.get('/create-ventas-form', services.create_sale_form);
 route.get('/create-detalle-venta', services.create_sale_detail_form);
 
-
-route.post('/add-user', services.add_user);
+route.get('/add-user-form', services.create_user_form);
 route.get('/add-user', services.add_user);
+route.post('/add-user', services.add_user);
 route.post('/read-user', services.read_users);
 route.get('/read-user', services.read_users);
 route.post('/update-user', services.update_user);
