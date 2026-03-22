@@ -1,0 +1,76 @@
+/*============================== carousel ============================*/
+/* Carousel Mejorado */
+.container-carousel {
+    border-bottom: 5px solid var(--warm-tan);
+}
+
+.carousel-caption {
+    background: rgba(49, 27, 20, 0.7); /* Transparencia con el café oscuro */
+    border-radius: 15px;
+    padding: 20px;
+    border-left: 5px solid var(--accent-orange);
+}
+
+.carousel-caption h5 {
+    color: var(--warm-tan);
+    font-weight: bold;
+}
+
+/* Cards de productos */
+.container-cards {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+    background-color: var(--light-bg);
+}
+
+.card {
+    border: 1px solid var(--warm-tan);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(49, 27, 20, 0.2);
+}
+
+.card-title {
+    color: var(--primary-dark);
+    font-weight: bold;
+}
+
+.card-link {
+    color: var(--accent-orange);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.card-link:hover {
+    color: var(--primary-dark);
+}
+
+/* Botones y Tablas */
+.thead-dark th {
+    background-color: var(--primary-dark) !important;
+    color: var(--warm-tan) !important;
+}
+
+.text-gradient {
+    color: var(--accent-orange);
+    font-weight: bold;
+}
+
+.container-carousel{
+    max-width: 1200px;
+    margin: auto;
+}
+
+.carousel-item{
+    height: 400px;   /* altura fija del carrusel */
+}
+
+.carousel-item img{
+    height: 100%;
+    width: 100%;
+    object-fit: cover;   /* magia real */
+}
