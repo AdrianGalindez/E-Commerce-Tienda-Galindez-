@@ -9,6 +9,18 @@
         <input type="text" class="form-control" id="nombre" name="nombre" required>
         </div>
 
+        <!-- Descripción -->
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea 
+                class="form-control" 
+                id="descripcion" 
+                name="descripcion" 
+                rows="3"
+                placeholder="Describe el producto..."
+            ></textarea>
+        </div>
+        
         <!-- Precio de costo -->
         <div class="form-group">
         <label for="precioCosto">Precio de costo (Inversión)</label>
@@ -61,9 +73,10 @@
         </div>
 
         <!-- Imagen -->
+        <!-- Imágenes (máximo 4) -->
         <div class="form-group">
-        <label for="foto">Imagen</label>
-        <input type="file" class="form-control" id="foto" name="foto">
+          <label for="fotos">Imágenes del producto (máx 4)</label>
+          <input type="file" class="form-control" id="fotos" name="fotos" multiple>
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Crear Producto</button>
