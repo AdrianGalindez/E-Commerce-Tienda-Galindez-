@@ -5,10 +5,13 @@ const bodyparser = require("body-parser");
 const path = require('path');
 const connectDB = require('./server/database/connection');
 const Categorydb = require('./server/model/categories');
+const methodOverride = require('method-override');
+
 dotenv.config( { path : 'config.env'} )
 
 const app = express();
 app.use(express.json());
+app.use(methodOverride('_method'));
 // parse request to body-parser
 app.use(bodyparser.urlencoded({ extended : true}))
 app.use(express.static(path.join(__dirname, 'public')));
