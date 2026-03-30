@@ -54,18 +54,6 @@ exports.car = (req, res) => {
 
 
 
-// exports.brands = (req, res) => {
-//     axios.get('http://localhost:3000/api/marcas')
-//         .then(response => {
-
-//             const marcas = response.data;
-
-//             res.render('brands', { brands: marcas });
-
-//         })
-//         .catch(err => res.send(err));
-// };
-
 exports.Productbrands = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
@@ -152,37 +140,30 @@ exports.read_products = (req, res) => {
 exports.update_products = async (req, res) => {
     try {
 
-        const brand = await Brand_db.findById(req.params.id);
+        const id = req.query.id;
 
-        if (!brand) {
-            return res.status(404).send({ message: "Marca no encontrada" });
-        }
+        const response = await axios.get('http://localhost:3000/api/productos', {
+            params: { id }
+        });
 
-        // Manejo de imagen
-        let nuevaImagen = brand.foto; // mantiene la actual
+        const producto = response.data;
 
-        if (req.file) {
-            nuevaImagen = `/assets/img/${req.file.filename}`;
-        }
+        const [marcasRes, categoriasRes, proveedoresRes] = await Promise.all([
+            axios.get('http://localhost:3000/api/marcas'),
+            axios.get('http://localhost:3000/api/categorias'),
+            axios.get('http://localhost:3000/api/proveedores')
+        ]);
 
-        // Datos actualizados
-        const updatedData = {
-            nombre: req.body.nombre || brand.nombre,
-            foto: nuevaImagen
-        };
-
-        const updatedBrand = await Brand_db.findByIdAndUpdate(
-            req.params.id,
-            updatedData,
-            { new: true }
-        );
-
-        // Redirección correcta
-        res.redirect('/read-marca');
+        res.render('update_products', {
+            producto,
+            marcas: marcasRes.data,
+            categorias: categoriasRes.data,
+            proveedores: proveedoresRes.data
+        });
 
     } catch (err) {
-        console.error("ERROR UPDATE BRAND:", err);
-        res.status(500).send(err);
+        console.error("ERROR UPDATE PRODUCT:", err);
+        res.status(500).send(err.message);
     }
 };
 
@@ -228,10 +209,16 @@ exports.read_categories = (req, res) => {
 
 
 exports.update_category = (req, res) => {
-    axios.get('http://localhost:3000/api/categorias', { params: { id: req.query.id }})
+
+    axios.get(`http://localhost:3000/api/categorias/${req.query.id}`)
         .then(response => {
-            res.render('update_categoria', { category: response.data });
+            console.log("ID RECIBIDO:", req.query.id);
+            const category = response.data;
+
+            res.render('update_category', { category });
+
         })
+        
         .catch(err => res.send(err));
 };
 
@@ -240,6 +227,17 @@ exports.delete_category = (req, res) => {
         .then(response => {
             res.redirect('/read-categoria');
         })
+        .catch(err => res.send(err));
+};
+
+exports.update_category_data = (req, res) => {
+
+    axios.put(`http://localhost:3000/api/categorias/${req.params.id}`, req.body)
+
+        .then(response => {
+            res.redirect('/read-categoria');
+        })
+
         .catch(err => res.send(err));
 };
 
@@ -395,6 +393,34 @@ exports.update_user = async (req, res) => {
         const response = await axios.get('http://localhost:3000/api/users/' + req.params.id);
         res.render('update_user', { user: response.data });
     } catch (err) { res.send(err); }
+};
+
+exports.update_user_data = async (req, res) => {
+
+    try {
+
+        const id = req.params.id;
+
+        const body = {
+            nombre: req.body.nombre,
+            telefono: req.body.telefono,
+            direccion: req.body.direccion,
+            genero: req.body.genero,
+            barrio: req.body.barrio,
+            ciudad: req.body.ciudad,
+            puntoReferencia: req.body.puntoReferencia
+        };
+
+        await axios.put(`http://localhost:3000/api/users/${id}`, body);
+
+        res.redirect('/read-user');
+
+    } catch (err) {
+
+        console.error("ERROR UPDATE USER:", err.message);
+        res.send(err.message);
+
+    }
 };
 
 exports.delete_user = (req, res) => {

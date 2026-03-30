@@ -21,7 +21,8 @@ route.get('/api/users', userController.find);
 route.get('/api/users/:id', userController.find);
 route.put('/api/users/:id', userController.update);
 route.delete('/api/users/:id', userController.delete);
-
+route.get('/update-user/:id', services.update_user);
+route.post('/update-user/:id', services.update_user_data);
 
 //========================API PRODUCTOS=================
 route.post('/api/productos', upload.array('fotos', 4), productController.create);
@@ -32,9 +33,10 @@ route.delete('/api/productos/:id', productController.delete);
 //========================API CATEGORIAS=================
 route.post('/api/categorias', categoryController.create);
 route.get('/api/categorias', categoryController.find);
+route.get('/api/categorias/:id', categoryController.find);
 route.put('/api/categorias/:id', categoryController.update);
 route.delete('/api/categorias/:id', categoryController.delete);
-
+route.post('/update-categoria/:id', services.update_category_data);
 
 //========================API MARCAS=================
 route.post('/api/marcas', upload.single('foto'), brandController.create);

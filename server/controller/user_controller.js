@@ -103,6 +103,23 @@ exports.update = async (req, res) => {
     }
 };
 
+exports.update_user = async (req, res) => {
+    try {
+
+        const id = req.params.id;
+
+        const response = await axios.get(`http://localhost:3000/api/users/${id}`);
+
+        const user = response.data;
+
+        res.render('update_user', { user });
+
+    } catch (err) {
+        console.error("ERROR UPDATE USER:", err.message);
+        res.send(err.message);
+    }
+};
+
 // DELETE USER (BORRADO LÓGICO)
 exports.delete = async (req, res) => {
     try {

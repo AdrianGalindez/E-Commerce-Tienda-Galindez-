@@ -36,12 +36,34 @@ exports.create = async (req, res) => {
 
 
 // FIND
-exports.find = (req, res) => {
-    Categorydb.find()
-        .then(data => res.json(data))
-        .catch(err => res.status(500).json({
+exports.find = async (req, res) => {
+
+    try {
+
+        if (req.params.id) {
+
+            const data = await Categorydb.findById(req.params.id);
+
+            if (!data) {
+                return res.status(404).json({
+                    message: "Categoría no encontrada"
+                });
+            }
+
+            return res.json(data);
+        }
+
+        const data = await Categorydb.find();
+
+        res.json(data);
+
+    } catch (err) {
+
+        res.status(500).json({
             message: err.message
-        }));
+        });
+
+    }
 };
 
 
