@@ -94,6 +94,73 @@
 
 </div>
 
+
+
+<hr>
+
+<h3>⭐ Reseñas de clientes</h3>
+
+<% if(!reviews || reviews.length === 0){ %>
+
+<p>No hay reseñas todavía</p>
+
+<% } %>
+
+<% reviews.forEach(r => { %>
+
+<div class="card mb-3">
+
+    <div class="card-body">
+
+        <h5>
+            ⭐ <%= r.calificacion %> / 5
+        </h5>
+
+        <p>
+            <%= r.comentario %>
+        </p>
+
+        <small>
+            Usuario: <%= r.usuario?.nombre || "Anónimo" %>
+        </small>
+
+        <!-- fotos de la reseña -->
+
+        <% if(r.fotos && r.fotos.length > 0){ %>
+
+            <div class="mt-2">
+
+                <% r.fotos.forEach(f => { %>
+
+                    <img src="<%= f %>" 
+                    style="width:100px;height:100px;object-fit:cover;margin-right:5px;">
+
+                <% }) %>
+
+            </div>
+
+        <% } %>
+
+        <!-- video -->
+
+        <% if(r.video){ %>
+
+            <div class="mt-2">
+
+                <video width="250" controls>
+                    <source src="<%= r.video %>" type="video/mp4">
+                </video>
+
+            </div>
+
+        <% } %>
+
+    </div>
+
+</div>
+
+<% }) %>
+
 <!-- include footer -->
 <%- include('include/_footer') %>
 <!-- /include footer -->
