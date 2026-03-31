@@ -1,18 +1,26 @@
 const Userdb = require('../model/user');
-
+const bcrypt = require('bcrypt');
 
 // CREATE USER
 
 exports.create = async (req, res) => {
     try {
         console.log("Creando usuario con datos:", req.body);
-        let { nombre, email, telefono, direccion, genero, barrio, ciudad, puntoReferencia, ubicacion } = req.body;
+        let { nombre, email,password, telefono, direccion, genero, barrio, ciudad, puntoReferencia, ubicacion } = req.body;
 
+
+        
         // Validar campos obligatorios
-        if (!nombre || !email || !telefono || !direccion) {
-            return res.status(400).json({ message: "Nombre, email, teléfono y dirección son obligatorios." });
+        if (!nombre || !email || !telefono || !direccion || !password) {
+            return res.status(400).json({
+                message: "Nombre, email, teléfono, dirección y contraseña son obligatorios."
+            });
         }
-
+        if (password.length < 6) {
+            return res.status(400).json({
+                message: "La contraseña debe tener al menos 6 caracteres."
+            });
+        }
         // Normalizar email
         email = email.toLowerCase();
 
@@ -35,10 +43,11 @@ exports.create = async (req, res) => {
                 return res.status(400).json({ message: "Ubicación incompleta. Debe incluir lat y lng." });
             }
         }
-
+        const hash = await bcrypt.hash(password, 10);// Hash de la contraseña
         const user = new Userdb({
             nombre,
             email,
+            password: hash, // Guardar el hash de la contraseña
             telefono,
             genero,
             direccion,
@@ -50,7 +59,9 @@ exports.create = async (req, res) => {
         });
 
         const data = await user.save();
-        res.status(201).json(data);
+        const userResponse = data.toObject();
+        delete userResponse.password;
+        res.status(201).json(userResponse);
 
     } catch (err) {
         if (err.code === 11000) {

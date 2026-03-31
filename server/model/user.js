@@ -2,61 +2,71 @@ const mongoose = require('mongoose');
 
 var schema = new mongoose.Schema({
 
-    nombre : {
-        type : String,
+    nombre: {
+        type: String,
         required: true
     },
 
-    email : {
+    email: {
         type: String,
         required: true,
         unique: true
     },
 
-    telefono : {
+    password: {
         type: String,
         required: true
     },
 
-    genero : {
-        type: String
-    },
-
-    direccion : {
+    telefono: {
         type: String,
         required: true
     },
 
-    barrio : {
+    genero: {
         type: String
     },
 
-    ciudad : {
+    direccion: {
+        type: String,
+        required: true
+    },
+
+    barrio: {
+        type: String
+    },
+
+    ciudad: {
         type: String,
         default: "Timbio"
     },
 
-    puntoReferencia : {
-        type: String,
+    puntoReferencia: {
+        type: String
     },
 
-    ubicacion : {
+    ubicacion: {
         lat: Number,
         lng: Number
-       
     },
 
-    estado : {
-        type : String,
+    rol: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'roldb',
+        required: true
+    },
+
+    estado: {
+        type: String,
         default: "Activo"
     },
 
-    fechaRegistro : {
+    fechaRegistro: {
         type: Date,
         default: Date.now
     }
 
-})
+});
 
 const Userdb = mongoose.model('userdb', schema);
 

@@ -8,11 +8,14 @@ const userController = require('../controller/user_controller');
 const productController = require('../controller/product_controller');
 const categoryController = require('../controller/category_controller');
 const brandController = require('../controller/brand_controller');
+const checkoutController = require('../controller/checkout_controller');
 const saleController = require('../controller/sale_controller');
 const providerController = require('../controller/provider_controller');
 const rolController = require('../controller/rol_controller');
 const detailSalesController = require('../controller/detailSales_controller');
 const reviewController = require('../controller/reviewController');
+const authController = require('../controller/auth_controller');
+const { isAdmin } = require('../middleware/auth');
 
 // rutas del cliente
 //=======================API USERS====================
@@ -23,6 +26,11 @@ route.put('/api/users/:id', userController.update);
 route.delete('/api/users/:id', userController.delete);
 route.get('/update-user/:id', services.update_user);
 route.post('/update-user/:id', services.update_user_data);
+
+// ========================API AUTH====================
+route.post('/login', authController.login);
+route.get('/login', services.login);
+route.get('/logout', authController.logout);
 
 //========================API PRODUCTOS=================
 route.post('/api/productos', upload.array('fotos', 4), productController.create);
@@ -77,6 +85,8 @@ route.post('/api/reviews', upload.fields([
  { name: 'video', maxCount: 1 }
 ]), reviewController.create);
 
+
+// ========================== API REVIEWS =====================
 route.get('/api/reviews', reviewController.find);
 route.put('/api/reviews/:id', reviewController.update);
 route.delete('/api/reviews/:id', reviewController.delete);
@@ -86,108 +96,87 @@ route.delete('/api/reviews/:id', reviewController.delete);
 route.get('/', services.homeRoutes);
 route.get('/promociones', services.promotions);
 route.get('/marcas', services.brands);
-route.get('/carrito', services.car);
-route.get('/categoria/:nombre', services.category); // ruta de catergorias dinamica 
 
+//==========================CARRITO Y CHECKOUT=================
+route.post('/checkout', checkoutController.checkout);
+route.get('/checkout/confirmacion/:id', checkoutController.confirmacion);
+route.get('/carrito', checkoutController.car);
+route.post('/carrito', checkoutController.car);
+route.post('/carrito/actualizar', checkoutController.update_carrito);
+route.post('/carrito/eliminar', checkoutController.remove_from_carrito);
+route.post('/add-to-carrito', checkoutController.add_to_carrito);
+route.post('/remove-from-carrito', checkoutController.remove_from_carrito);
 
 //========================Rutas del admin=================
-route.get('/create-categoria', services.create_category_form);
-route.post('/create-categoria', services.create_category);
-route.get('/read-categoria', services.read_categories);
-route.post('/read-categoria', services.read_categories);
-route.get('/update-categoria', services.update_category);
-route.post('/update-categoria', services.update_category);
-route.get('/delete-categoria/:id', services.delete_category);
+route.get('/categoria/:nombre', services.category); // ruta de catergorias dinamica 
+route.get('/create-categoria',isAdmin, services.create_category_form);
+route.post('/create-categoria',isAdmin, services.create_category);
+route.get('/read-categoria',isAdmin, services.read_categories);
+route.post('/read-categoria',isAdmin, services.read_categories);
+route.get('/update-categoria',isAdmin, services.update_category);
+route.post('/update-categoria',isAdmin, services.update_category);
+route.get('/delete-categoria/:id', isAdmin, services.delete_category);
 route.get('/brand/:marca', services.Productbrands);
 
-// console.log("services.Productbrands:", services.Productbrands);
-//
-route.get('/create-marca', services.create_brand_form);
-route.post('/create-marca', services.create_brand);
-route.get('/read-marca', services.read_brands);
-route.get('/update-marca', brandController.getBrandForEdit);
-// route.get('/update-marca', services.update_brand);
-// route.post('/update-marca', services.update_brand);
-route.post('/update-marca/:id', upload.single('foto'), brandController.update); // guarda cambios
-route.get('/delete-marca/:id', services.delete_brand);
+//=======================MARCAS========================
+route.get('/create-marca', isAdmin, services.create_brand_form);
+route.post('/create-marca', isAdmin, services.create_brand);
+route.get('/read-marca', isAdmin, services.read_brands);
+route.get('/update-marca', isAdmin, brandController.getBrandForEdit);
+route.post('/update-marca/:id',isAdmin, upload.single('foto'), brandController.update); // guarda cambios
+route.get('/delete-marca/:id', isAdmin, services.delete_brand);
 
-// 
-route.post('/create-producto', services.create_product);
-route.get('/read-producto', services.read_products);
-route.post('/read-producto', services.read_products);
-route.get('/update-producto', services.update_products);
-route.post('/update-producto', services.update_products);
-route.get('/create-producto', services.create_product_form);
-route.get('/delete-producto/:id', services.delete_product);
-route.get('/Detalles/:id', services.product_detail);
+//=======================PRODUCTOS========================
+route.post('/create-producto',isAdmin, services.create_product);
+route.get('/read-producto', isAdmin, services.read_products);
+route.post('/read-producto', isAdmin, services.read_products);
+route.get('/update-producto', isAdmin, services.update_products);
+route.post('/update-producto', isAdmin, services.update_products);
+route.get('/create-producto', isAdmin, services.create_product_form);
+route.get('/delete-producto/:id', isAdmin, services.delete_product);
+route.get('/Detalles/:id',  services.product_detail);
 
 
 // Mostrar formulario de creación
-route.get('/create-proveedor', services.create_provider_form);
-route.post('/create-proveedor', services.create_provider);
-route.get('/read-proveedor', services.read_providers);
-route.post('/read-proveedor', services.read_providers);
-route.get('/update-proveedor', services.update_provider);
-route.post('/update-proveedor', services.update_provider);
-route.get('/update-proveedor', services.edit_provider_form);
-route.post('/update-proveedor/:id', services.update_provider_data);
-route.get('/delete-proveedor/:id', services.delete_provider);
+route.get('/create-proveedor', isAdmin, services.create_provider_form);
+route.post('/create-proveedor', isAdmin, services.create_provider);
+route.get('/read-proveedor', isAdmin, services.read_providers);
+route.post('/read-proveedor', isAdmin, services.read_providers);
+route.get('/update-proveedor', isAdmin, services.update_provider);
+route.post('/update-proveedor', isAdmin, services.update_provider);
+route.get('/update-proveedor', isAdmin, services.edit_provider_form);
+route.post('/update-proveedor/:id', isAdmin, services.update_provider_data);
+route.get('/delete-proveedor/:id', isAdmin, services.delete_provider);
 
-// 
-route.post('/create-rol', services.create_rol);
-route.get('/create-rol', services.create_rol);
-route.post('/read-rol', services.read_roles);
-route.get('/read-rol', services.read_roles);
-route.post('/update-rol', services.update_rol);
-route.get('/update-rol', services.update_rol);
-route.get('/delete-rol/:id', services.delete_rol);
+//=======================ROLES========================
+route.post('/create-rol', isAdmin, services.create_rol);
+route.get('/create-rol', isAdmin, services.create_rol);
+route.post('/read-rol', isAdmin, services.read_roles);
+route.get('/read-rol', isAdmin, services.read_roles);
+route.post('/update-rol', isAdmin, services.update_rol);
+route.get('/update-rol', isAdmin, services.update_rol);
+route.get('/delete-rol/:id', isAdmin, services.delete_rol);
 
-// 
-route.post('/create-ventas', services.sales);
-route.get('/create-ventas', services.sales);
-route.post('/read-ventas', services.sales);
-route.get('/read-ventas', services.sales);
-route.post('/update-ventas', services.sales);
-route.get('/update-ventas', services.sales);
-route.get('/create-ventas-form', services.create_sale_form);
-route.get('/create-detalle-venta', services.create_sale_detail_form);
+//=======================VENTAS========================
+route.post('/create-ventas', isAdmin, services.sales);
+route.get('/create-ventas', isAdmin, services.sales);
+route.post('/read-ventas', isAdmin, services.sales);
+route.get('/read-ventas', isAdmin, services.sales);
+route.post('/update-ventas', isAdmin, services.sales);
+route.get('/update-ventas', isAdmin, services.sales);
+route.get('/create-ventas-form', isAdmin, services.create_sale_form);
+route.get('/create-detalle-venta', isAdmin, services.create_sale_detail_form);
 
-// 
-route.get('/add-user-form', services.create_user_form);
-route.get('/add-user', services.add_user);
-route.post('/add-user', services.add_user);
-route.post('/read-user', services.read_users);
-route.get('/read-user', services.read_users);
-route.post('/update-user', services.update_user);
-route.get('/update-user', services.update_user);
-route.get('/delete-user/:id', services.delete_user);
+//=======================USUARIOS========================
+route.get('/add-user-form', isAdmin, services.create_user_form);
+route.get('/add-user', isAdmin, services.add_user);
+route.post('/add-user', isAdmin, services.add_user);
+route.post('/read-user', isAdmin, services.read_users);
+route.get('/read-user', isAdmin, services.read_users);
+route.post('/update-user', isAdmin, services.update_user);
+route.get('/update-user', isAdmin, services.update_user);
+route.get('/delete-user/:id', isAdmin, services.delete_user);
 
 
-const funciones = [
-  'homeRoutes',
-  'promotions',
-  'brands',
-  'car',
-  'category',
-  'Productbrands',
-  'create_category_form',
-  'create_category',
-  'read_categories',
-  'delete_category'
-];
 
-funciones.forEach(f => {
-  console.log(`${f}:`, services[f]);
-});
-console.log('SERVICES DISPONIBLES:', services);
-
-console.log("=== Verificando funciones en services ===");
-
-Object.keys(services).forEach(key => {
-    if (typeof services[key] !== 'function') {
-        console.log(`⚠️ Función faltante o mal exportada: ${key} =`, services[key]);
-    } else {
-        console.log(`✅ Función disponible: ${key}`);
-    }
-});
 module.exports = route;

@@ -6,10 +6,16 @@ const path = require('path');
 const connectDB = require('./server/database/connection');
 const Categorydb = require('./server/model/categories');
 const methodOverride = require('method-override');
-
+const session = require('express-session');
+const seedAdmin = require('./server/config/seedAdmin');
 dotenv.config( { path : 'config.env'} )
 
 const app = express();
+app.use(session({
+    secret: "tienda-galindez",
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(express.json());
 app.use(methodOverride('_method'));
 // parse request to body-parser
@@ -25,7 +31,10 @@ const PORT = process.env.PORT || 8080
 app.use(morgan('tiny'));
 
 // mongodb connection
-connectDB();
+connectDB().then(() => {
+    console.log("MongoDB conectado");
+    seedAdmin(); // crear admin automático al iniciar
+});
 
 //  categorias disponibles en TODAS las vistas
 app.use(async (req, res, next) => {
