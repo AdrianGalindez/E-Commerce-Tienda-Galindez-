@@ -92,7 +92,7 @@
             </ul>
             <div class="card-body">
                 <a href="/Detalles/<%= p._id %>" class="card-link">Ver Detalles</a>
-                <form action="/carrito" method="POST" style="display:inline;">
+                <form action="/add-to-carrito" method="POST" style="display:inline;">
                     <input type="hidden" name="productoId" value="<%= p._id %>">
                     <button type="submit" class="card-link">🛒 Agregar</button>
                 </form>                        

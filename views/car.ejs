@@ -15,18 +15,18 @@
 
       <header class="cart-header">
         <h1>Tu Despensa</h1>
-        <span class="badge"><%= productos.length %> Artículos</span>
+        <span class="badge"><%= productosCarrito.length %> Artículos</span>
       </header>
 
       <div class="product-list">
 
-        <% if(productos.length === 0){ %>
+        <% if(productosCarrito.length === 0){ %>
 
           <p>Tu carrito está vacío.</p>
 
         <% } %>
 
-        <% productos.forEach(producto => { %>
+        <% productosCarrito.forEach(producto => { %>
 
         <article class="product-card">
 
