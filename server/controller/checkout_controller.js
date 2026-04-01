@@ -79,27 +79,34 @@ exports.confirmacion = async (req, res) => {
 
 
 exports.add_to_carrito = (req, res) => {
-
     const { productoId } = req.body;
 
     if (!req.session.carrito) {
         req.session.carrito = [];
     }
 
-    const carrito = req.session.carrito;
-
-    const productoExistente = carrito.find(p => p.productoId == productoId);
+    // Convertimos a String para evitar problemas de comparación entre ObjectId y String
+    const idBuscado = productoId.toString();
+    
+    const productoExistente = req.session.carrito.find(p => p.productoId.toString() === idBuscado);
 
     if (productoExistente) {
         productoExistente.cantidad += 1;
     } else {
-        carrito.push({
-            productoId,
+        req.session.carrito.push({
+            productoId: idBuscado,
             cantidad: 1
         });
     }
 
-    res.redirect('/carrito');
+    // Forzar el guardado de la sesión antes de redirigir
+    req.session.save((err) => {
+        if (err) {
+            console.error("Error al guardar sesión:", err);
+            return res.status(500).send("Error al agregar al carrito");
+        }
+        res.redirect('/carrito');
+    });
 };
 
 
@@ -114,9 +121,7 @@ exports.car = async (req, res) => {
         const producto = await Productdb.findById(item.productoId);
 
         if (producto) {
-
             const sub = producto.precio * item.cantidad;
-
             subtotal += sub;
 
             productos.push({
@@ -129,7 +134,8 @@ exports.car = async (req, res) => {
         }
     }
 
-    res.render('car', { productos, subtotal });
+    // 🔹 Cambiado aquí
+    res.render('car', { productosCarrito: productos, subtotal });
 };
 
 
