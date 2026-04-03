@@ -2,7 +2,7 @@ const express = require('express');
 const route = express.Router()
 // const services = require('../services/render');
 const upload = require('../middleware/upload'); 
-
+const { isLogged } = require('../middleware/auth');
 
 // services para renderizar vistas
 const servicesRenderUser = require('../services/renderUsers');
@@ -22,7 +22,7 @@ const userController = require('../controller/user_controller');
 const productController = require('../controller/product_controller');
 const categoryController = require('../controller/category_controller');
 const brandController = require('../controller/brand_controller');
-const checkoutController = require('../controller/checkout_controller');
+const cartController = require('../controller/cart_controller');
 const saleController = require('../controller/sale_controller');
 const providerController = require('../controller/provider_controller');
 const rolController = require('../controller/rol_controller');
@@ -45,6 +45,10 @@ route.post('/update-user/:id', servicesRenderUser.update_user_data);
 route.post('/login', authController.login);
 route.get('/login', servicesLoginLogout.login);
 route.get('/logout', authController.logout);
+
+// ======================== REGISTER =====================
+route.get('/register', (req, res) => res.render('register'));
+route.post('/register', authController.register);
 
 //========================API PRODUCTOS=================
 route.post('/api/productos', upload.array('fotos', 4), productController.create);
@@ -112,14 +116,14 @@ route.get('/promociones', servicesRenderPromotions.promotions);
 route.get('/marcas', servicesRenderBrand.brands);
 
 //==========================CARRITO Y CHECKOUT=================
-route.post('/checkout', checkoutController.checkout);
-route.get('/checkout/confirmacion/:id', checkoutController.confirmacion);
-route.get('/carrito', checkoutController.car);
-route.post('/carrito', checkoutController.car);
-route.post('/carrito/actualizar', checkoutController.update_carrito);
-route.post('/carrito/eliminar', checkoutController.remove_from_carrito);
-route.post('/add-to-carrito', checkoutController.add_to_carrito);
-route.post('/remove-from-carrito', checkoutController.remove_from_carrito);
+route.post('/checkout',isLogged, cartController.checkout);
+route.get('/checkout/confirmacion/:id',isLogged, cartController.confirmacion);
+route.get('/carrito',isLogged, cartController.car);
+route.post('/carrito',isLogged, cartController.car);
+route.post('/carrito/actualizar',isLogged, cartController.update_carrito);
+route.post('/carrito/eliminar',isLogged, cartController.remove_from_carrito);
+route.post('/add-to-carrito',isLogged, cartController.add_to_carrito);
+route.post('/remove-from-carrito',isLogged, cartController.remove_from_carrito);
 
 //========================Rutas del admin=================
 route.get('/categoria/:nombre', servicesRenderCategory.category); // ruta de catergorias dinamica 
@@ -164,7 +168,7 @@ route.get('/delete-proveedor/:id', isAdmin, servicesRenderProvider.delete_provid
 
 //=======================ROLES========================
 route.post('/create-rol', isAdmin, servicesRenderRol.create_rol);
-route.get('/create-rol', isAdmin, servicesRenderRol.create_rol);
+route.get('/create-rol', isAdmin, servicesRenderRol.create_rol_form);
 route.post('/read-rol', isAdmin, servicesRenderRol.read_roles);
 route.get('/read-rol', isAdmin, servicesRenderRol.read_roles);
 route.post('/update-rol', isAdmin, servicesRenderRol.update_rol);

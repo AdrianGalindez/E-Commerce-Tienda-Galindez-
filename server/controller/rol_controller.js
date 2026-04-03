@@ -1,78 +1,92 @@
-var Roldb = require('../model/rol');
+const Roldb = require('../model/rol');
+const Userdb = require('../model/user');
 
-// =======================
-// CREATE
-// =======================
-exports.create = (req, res) => {
-
-    const rol = new Roldb({
-        nombre: req.body.nombre,
-        descripcion: req.body.descripcion
-    });
-
-    rol.save()
-        .then(data => res.send(data))
-        .catch(err => res.status(500).send(err));
-}
-
-
-// =======================
-// FIND
-// =======================
-exports.find = (req, res) => {
-
-    Roldb.find()
-        .then(data => res.send(data))
-        .catch(err => res.status(500).send(err));
-}
-
-
-// =======================
-// UPDATE
-// =======================
-exports.update = (req, res) => {
-
-    Roldb.findByIdAndUpdate(req.params.id, req.body)
-        .then(data => res.send(data))
-        .catch(err => res.status(500).send(err));
-}
-
-
-// DELETE
-exports.delete = async (req, res) => {
+// ======================= CREATE =======================
+exports.create = async (req, res) => {
     try {
-        const id = req.params.id;
 
-        if (!id) {
-            return res.status(400).send({
-                message: "ID requerido"
-            });
+        const { nombre, descripcion } = req.body;
+
+        if (!nombre) {
+            return res.status(400).send("El nombre es obligatorio");
         }
 
-        // VALIDAR SI HAY USUARIOS CON ESTE ROL
+        const existe = await Roldb.findOne({ nombre });
+
+        if (existe) {
+            return res.status(400).send("El rol ya existe");
+        }
+
+        const rol = new Roldb({ nombre, descripcion });
+
+        await rol.save();
+
+        res.redirect('/read-rol');
+
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+// ======================= FIND =======================
+exports.find = async (req, res) => {
+    try {
+
+        if (req.query.id) {
+            const rol = await Roldb.findById(req.query.id);
+            return res.send(rol);
+        }
+
+        const roles = await Roldb.find();
+        res.send(roles);
+
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+// ======================= UPDATE =======================
+exports.update = async (req, res) => {
+    try {
+
+        const id = req.params.id;
+
+        const rol = await Roldb.findByIdAndUpdate(id, req.body, {
+            new: true
+        });
+
+        if (!rol) {
+            return res.status(404).send("Rol no encontrado");
+        }
+
+        res.redirect('/read-rol');
+
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+};
+
+// ======================= DELETE =======================
+exports.delete = async (req, res) => {
+    try {
+
+        const id = req.params.id;
+
         const usuarios = await Userdb.find({ rol: id });
 
         if (usuarios.length > 0) {
-            return res.status(400).send({
-                message: "No puedes eliminar este rol porque tiene usuarios asociados"
-            });
+            return res.status(400).send("No puedes eliminar este rol, tiene usuarios");
         }
 
-        const data = await Roldb.findByIdAndDelete(id);
+        const rol = await Roldb.findByIdAndDelete(id);
 
-        if (!data) {
-            return res.status(404).send({
-                message: "Rol no encontrado"
-            });
+        if (!rol) {
+            return res.status(404).send("Rol no encontrado");
         }
 
-        res.send({
-            message: "Rol eliminado correctamente"
-        });
+        res.redirect('/read-rol');
 
     } catch (err) {
-        res.status(500).send({
-            message: err.message
-        });
+        res.status(500).send(err.message);
     }
 };

@@ -1,47 +1,90 @@
-const axios = require('axios');
+const Cartdb = require('../model/cart');
 
-
-// Carrito
+// 🛒 Mostrar carrito
 exports.car = async (req, res) => {
     try {
-        // Si no hay carrito, enviamos un arreglo vacío
-        const carrito = req.session.carrito || [];
 
-        // Traemos todos los productos desde la API
-        const response = await axios.get('http://localhost:3000/api/productos');
-        const productosTodos = response.data;
+        const userId = req.session.user?._id;
 
-        // Unir carrito con datos completos de productos
-        const productosCarrito = carrito.map(item => {
-            const producto = productosTodos.find(p => p._id === item.productoId);
-            return {
-                ...producto,
-                cantidad: item.cantidad
-            };
+        if (!userId) {
+            return res.redirect('/login');
+        }
+
+        const cart = await Cartdb
+            .findOne({ usuario: userId })
+            .populate('items.producto');
+
+        const productosCarrito = cart ? cart.items : [];
+
+        const subtotal = cart
+            ? cart.items.reduce((sum, item) => sum + item.subtotal, 0)
+            : 0;
+
+        res.render('car', {
+            productosCarrito,
+            subtotal
         });
 
-        // Calcular subtotal
-        const subtotal = productosCarrito.reduce((sum, p) => sum + p.precio * p.cantidad, 0);
-
-        res.render('car', { productosCarrito, subtotal });
     } catch (err) {
         console.error(err);
-        res.send(err.message);
+        res.status(500).send(err.message);
     }
 };
 
-exports.add_to_carrito = (req, res) => {
-    const productoId = req.body.productoId;
-    const cantidad = Number(req.body.cantidad) || 1;
+// ➕ Agregar al carrito
+exports.add_to_carrito = async (req, res) => {
+    try {
 
-    if (!req.session.carrito) req.session.carrito = [];
+        const userId = req.session.user?._id;
+        const { productoId, cantidad } = req.body;
 
-    const index = req.session.carrito.findIndex(p => p.productoId === productoId);
-    if (index >= 0) {
-        req.session.carrito[index].cantidad += cantidad;
-    } else {
-        req.session.carrito.push({ productoId, cantidad });
+        if (!userId) {
+            return res.redirect('/login');
+        }
+
+        const Productdb = require('../model/product');
+        const producto = await Productdb.findById(productoId);
+
+        if (!producto) {
+            return res.status(404).send("Producto no encontrado");
+        }
+
+        let cart = await Cartdb.findOne({ usuario: userId });
+
+        if (!cart) {
+            cart = new Cartdb({
+                usuario: userId,
+                items: [],
+                total: 0
+            });
+        }
+
+        const item = cart.items.find(
+            i => i.producto.toString() === productoId
+        );
+
+        const cant = parseInt(cantidad) || 1;
+
+        if (item) {
+            item.cantidad += cant;
+            item.subtotal = item.cantidad * producto.precio;
+        } else {
+            cart.items.push({
+                producto: productoId,
+                cantidad: cant,
+                precio: producto.precio,
+                subtotal: producto.precio * cant
+            });
+        }
+
+        cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
+
+        await cart.save();
+
+        res.redirect('/carrito');
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err.message);
     }
-
-    res.redirect('/carrito');
 };

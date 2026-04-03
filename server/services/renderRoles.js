@@ -16,7 +16,7 @@ exports.read_roles = (req, res) => {
 
 
 exports.update_rol = (req, res) => {
-    axios.get('http://localhost:3000/api/roles', { params: { id: req.query.id }})
+    axios.get(`http://localhost:3000/api/roles?id=${req.query.id}`)
         .then(response => {
             res.render('update_rol', { rol: response.data });
         })
@@ -25,8 +25,21 @@ exports.update_rol = (req, res) => {
 
 
 exports.create_rol = (req, res) => {
-    console.log(req.body);
-    res.render('create_rol');
+
+    console.log("BODY:", req.body); // 👈 DEBUG
+
+    if (!req.body.nombre) {
+        return res.send("Formulario vacío");
+    }
+
+    axios.post('http://localhost:3000/api/roles', req.body)
+        .then(() => {
+            res.redirect('/read-rol');
+        })
+        .catch(err => {
+            console.error(err.response?.data || err.message);
+            res.send(err.response?.data || err.message);
+        });
 };
 
 exports.delete_rol = (req, res) => {
