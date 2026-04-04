@@ -30,7 +30,7 @@
       <tr>
         <th scope="row" hidden><%= product._id %></th>
         <td><%= product.nombre %></td>
-        <td><%= product.descripcion %></td>
+        <td class="descripcion-corta" ><%= product.descripcion %></td>
 
         <td>
           <% if(product.fotos && product.fotos.length > 0){ %>

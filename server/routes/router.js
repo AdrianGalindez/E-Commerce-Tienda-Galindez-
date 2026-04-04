@@ -17,6 +17,7 @@ const servicesLoginLogout = require('../services/renderLoginLogout');
 const servicesRenderHomeRutes = require('../services/renderHomeRoutes');
 const servicesRenderPromotions = require('../services/renderPromotions');
 const servicesRenderPaymentPoint = require('../services/RenderPaymentPoint');
+const servicesRenderAdminAnalytics = require('../services/renderAdminAnalytics');
 
 // controladores de la aplicación
 const userController = require('../controller/user_controller');
@@ -204,4 +205,7 @@ route.post('/payment-point', isLogged, servicesRenderPaymentPoint.payment_point)
 route.get('/billing-point', isAdmin, servicesRenderPaymentPoint.billing_point);
 route.post('/billing-point', isAdmin, servicesRenderPaymentPoint.billing_point);
 
+
+// ======================== ADMIN ANALYTICS =====================
+route.get('/admin-analytics', isAdmin, servicesRenderAdminAnalytics.renderAdminAnalytics);
 module.exports = route;
