@@ -11,23 +11,33 @@
         </p>
 
 <div class="container-cards">
-    <% brands.forEach(function(brand){ %>
-        <div class="card" ">
-            <!-- Imagen opcional -->
-                <img src="<%= brand.foto ? brand.foto : '/assets/img/default.jpg' %>" alt="marca">            
-                <div class="card-body">
-                <h5 class="card-title"><%= brand.nombre %></h5>
-                <p class="card-text">
-                    Marca registrada en el sistema
-                </p>
-            </div>
-            <div class="card-body">
-                <a href="/brand/<%= brand.nombre %>" class="card-link">
-                    Ver productos
-                </a>
-            </div>
+
+<% brands.forEach(function(brand){ %>
+
+    <div class="card">
+
+        <img 
+        class="card-img-top"
+        src="<%= brand.foto ? brand.foto : '/assets/img/default.jpg' %>" 
+        alt="marca">
+
+        <div class="card-body">
+            <h5 class="card-title"><%= brand.nombre %></h5>
+            <p class="card-text">
+                Marca registrada en el sistema
+            </p>
         </div>
-    <% }) %>
+
+        <div class="card-body">
+            <a href="/brand/<%= brand.nombre %>" class="card-link">
+                Ver productos
+            </a>
+        </div>
+
+    </div>
+
+<% }) %>
+
 </div>
 </main>
 
