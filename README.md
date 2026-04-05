@@ -1,4 +1,5 @@
-# 🛒 Tienda Galindez  
+# <img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/9cba90c7-2aa1-44d2-b200-99a0830156b2" />
+🛒 Tienda Galindez  
 
 > 🌟 Donde comprar es una experiencia feliz  
 
