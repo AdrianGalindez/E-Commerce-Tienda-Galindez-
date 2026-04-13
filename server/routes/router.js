@@ -58,6 +58,7 @@ route.post('/api/productos', upload.array('fotos', 4), productController.create)
 route.get('/api/productos', productController.find);
 route.put('/api/productos/:id', upload.array('fotos', 4), productController.update);
 route.delete('/api/productos/:id', productController.delete);
+route.get('/api/productos/search', productController.searchApi);
 
 //========================API CATEGORIAS=================
 route.post('/api/categorias', categoryController.create);
@@ -116,6 +117,7 @@ route.delete('/api/reviews/:id', reviewController.delete);
 
 // rutas para consumir las apis desde el cliente
 route.get('/', servicesRenderHomeRutes.homeRoutes);
+route.get('/search', servicesRenderHomeRutes.search);
 route.get('/promociones', servicesRenderPromotions.promotions);
 route.get('/marcas', servicesRenderBrand.brands);
 
@@ -189,6 +191,7 @@ route.get('/update-ventas', isAdmin, servicesRenderSales.sales);
 route.get('/create-ventas-form', isAdmin, servicesRenderSales.create_sale_form);
 route.get('/create-detalle-venta', isAdmin, servicesRenderSales.create_sale_detail_form);
 
+
 //=======================USUARIOS========================
 route.get('/add-user-form', isAdmin, servicesRenderUser.create_user_form);
 route.get('/add-user', isAdmin, servicesRenderUser.add_user);
@@ -199,9 +202,6 @@ route.post('/update-user', isAdmin, servicesRenderUser.update_user);
 route.get('/update-user', isAdmin, servicesRenderUser.update_user);
 route.get('/delete-user/:id', isAdmin, servicesRenderUser.delete_user);
 
-//=======================PAYMENT POINT========================
-route.get('/payment-point', isLogged, servicesRenderPaymentPoint.payment_point);
-route.post('/payment-point', isLogged, servicesRenderPaymentPoint.payment_point);
 
 // ======================== Billing Point =====================
 route.get('/billing-point', isAdmin, servicesRenderPaymentPoint.billing_point);
@@ -211,3 +211,8 @@ route.post('/billing-point', isAdmin, servicesRenderPaymentPoint.billing_point);
 // ======================== ADMIN ANALYTICS =====================
 route.get('/admin-analytics', isAdmin, servicesRenderAdminAnalytics.renderAdminAnalytics);
 module.exports = route;
+
+
+//=======================PAYMENT POINT========================
+route.get('/payment-point', isLogged, servicesRenderPaymentPoint.payment_point);
+route.post('/payment-point', isLogged, servicesRenderPaymentPoint.payment_point);

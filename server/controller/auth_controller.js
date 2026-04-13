@@ -4,51 +4,34 @@ const bcrypt = require('bcrypt');
 
 // LOGIN
 exports.login = async (req, res) => {
-
     try {
-
         const { email, password } = req.body;
-
         const user = await Userdb
             .findOne({ email })
             .populate('rol');
-
         if (!user) {
             return res.send("Usuario no encontrado");
         }
-
         if (user.estado !== "Activo") {
             return res.send("Usuario desactivado");
         }
-
         const match = await bcrypt.compare(password, user.password);
 
         if (!match) {
             return res.send("Contraseña incorrecta");
         }
-
         // guardar sesión
         req.session.user = user;    
-        
-
         // redirección
         if (user.rol.nombre === "Admin") {
-
-            res.redirect('/read-producto');
-
+            res.redirect('/billing-point');
         } else {
-
             res.redirect('/');
-
         }
-
     } catch (err) {
-
         console.error(err);
         res.status(500).send("Error en login");
-
     }
-
 };
 
 // LOGOUT
@@ -67,7 +50,6 @@ exports.logout = (req, res) => {
 // ======================= REGISTER =======================
 exports.register = async (req, res) => {
     try {
-
         const {
             nombre,
             email,
@@ -80,27 +62,22 @@ exports.register = async (req, res) => {
             puntoReferencia
         } = req.body;
 
-        // 🔥 Validar campos obligatorios
+        // Validar campos obligatorios
         if (!nombre || !email || !password || !telefono || !direccion) {
             return res.send("Campos obligatorios incompletos");
         }
-
-        // 🔥 Verificar si ya existe
+        // Verificar si ya existe
         const existe = await Userdb.findOne({ email });
         if (existe) {
             return res.send("El email ya está registrado");
         }
-
-        // 🔥 Buscar rol CLIENTE
+        // Buscar rol CLIENTE
         const rolCliente = await Roldb.findOne({ nombre: "Cliente" });
-
         if (!rolCliente) {
             return res.send("Rol Cliente no existe en la base de datos");
         }
-
-        // 🔐 Encriptar contraseña
+        // Encriptar contraseña
         const hashedPassword = await bcrypt.hash(password, 10);
-
         // Crear usuario
         const nuevoUsuario = new Userdb({
             nombre,
@@ -114,10 +91,8 @@ exports.register = async (req, res) => {
             puntoReferencia,
             rol: rolCliente._id
         });
-
         await nuevoUsuario.save();
-
-        // 🔥 Opcional: iniciar sesión automáticamente
+        // Opcional: iniciar sesión automáticamente
         req.session.user = {
             _id: nuevoUsuario._id,
             nombre: nuevoUsuario.nombre,
@@ -125,9 +100,7 @@ exports.register = async (req, res) => {
                 nombre: "Cliente"
             }
         };
-
         res.redirect('/');
-
     } catch (err) {
         console.error(err);
         res.status(500).send("Error en registro");

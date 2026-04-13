@@ -97,17 +97,13 @@ exports.update = async (req, res) => {
                 message: "El precio no puede ser menor al costo"
             });
         }
-
-        // MANEJO DE IMÁGENES 🔥
-
+        // MANEJO DE IMÁGENES
         let fotosActuales = [...product.fotos];
-
         // 1. ELIMINAR IMÁGENES
         if (req.body.eliminarFotos) {
             const eliminar = Array.isArray(req.body.eliminarFotos)
                 ? req.body.eliminarFotos
                 : [req.body.eliminarFotos];
-
             eliminar.forEach(foto => {
                 const ruta = path.join(__dirname, '../public', foto);
                 if (fs.existsSync(ruta)) {
@@ -179,6 +175,36 @@ exports.delete = async (req, res) => {
         res.send({ message: "Producto eliminado correctamente" });
 
     } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
+};
+
+
+
+exports.searchApi = async (req, res) => {
+    try {
+        const search = req.query.search;
+
+        if (!search || search.trim() === "") {
+            return res.status(400).send({ message: "Parámetro de búsqueda vacío" });
+        }
+
+        const productos = await Productdb.find({
+            $or: [
+                { nombre: { $regex: search, $options: 'i' } },
+                { descripcion: { $regex: search, $options: 'i' } }
+            ]
+        })
+        .populate('marca')
+        .populate('categoria')
+        .populate('proveedor');
+        if (productos.length === 0) {
+            return res.send([]);
+        }
+        res.send(productos);
+
+    } catch (err) {
+        console.error("ERROR SEARCH API:", err);
         res.status(500).send({ message: err.message });
     }
 };

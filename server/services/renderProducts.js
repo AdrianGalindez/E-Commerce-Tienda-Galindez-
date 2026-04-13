@@ -4,9 +4,7 @@ const axios = require('axios');
 exports.product_detail = async (req, res) => {
 
     try {
-
         const id = req.params.id;
-
         const [productRes, reviewsRes] = await Promise.all([
 
             axios.get('http://localhost:3000/api/productos', {
@@ -18,18 +16,12 @@ exports.product_detail = async (req, res) => {
             })
 
         ]);
-
         const product = productRes.data;
         const reviews = reviewsRes.data;
-
         res.render('product_detail', { product, reviews });
-
     } catch (err) {
-
         res.send(err);
-
     }
-
 };
 
 
