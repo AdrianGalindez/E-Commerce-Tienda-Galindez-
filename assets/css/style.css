@@ -1,119 +1,22 @@
-/* ================================header===========================  */
+/* ===========================================================  */
 .container{
     width: 100%;
     background-color: rgb(255, 255, 255);
     display: flex;
-}
+} 
 
 .container div{
 
     flex: 1;
-}
-
-.nav-menu{
-    display: flex;
-}
-
-.nav-menu a{
-   flex: 1;
-   /* background-color: red; */
-}
-
-/*=================================== nav========================== */
-:root {
-    --primary-dark: #311b14;
-    --accent-orange: #d85c32;
-    --warm-tan: #d58d51;
-    --light-bg: #fdfaf7;
-}
-
-/* Navbar Mejorado */
-.navbar {
-    background-color: var(--primary-dark) !important;
-    border-bottom: 3px solid var(--accent-orange);
-}
-
-.navbar-brand, .nav-link {
-    color: white !important;
-}
-
-.nav-link:hover {
-    color: var(--warm-tan) !important;
-}
-
-
-/* ================================footer===========================  */
-.footer {
-    margin-top: 100%;
-    background: #000;
-    color: #fff;
-    padding: 50px 20px 20px;
-    font-family: Arial, sans-serif;
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
-}
-
-.footer-col h3,
-.footer-col h4 {
-    margin-bottom: 15px;
-    font-weight: 600;
-}
-
-.footer-col p {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #ccc;
-}
-
-.footer-col a {
-    display: block;
-    color: #fff;
-    text-decoration: none;
-    margin-bottom: 8px;
-    font-size: 14px;
-    transition: 0.3s;
-}
-
-.footer-col a:hover {
-    color: #0d6efd; /* color bootstrap */
-    padding-left: 5px;
-}
-
-.socials i {
-    font-size: 20px;
-    margin-right: 12px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.socials i:hover {
-    color: #0d6efd;
-}
-
-.footer-bottom {
-    border-top: 1px solid #222;
-    margin-top: 40px;
-    padding-top: 15px;
-    text-align: center;
-    font-size: 14px;
-    color: #aaa;
-}
-
+} 
 
 
 /* read productos  */
-
 .descripcion-corta{
-    max-width: 200px;      /* ancho máximo de la celda */
-    white-space: nowrap;   /* evita salto de línea */
-    overflow: hidden;      /* oculta el texto que sobra */
-    text-overflow: ellipsis; /* muestra ... */
+    max-width: 200px;     
+    white-space: nowrap;   
+    overflow: hidden;      
+    text-overflow: ellipsis; 
 }
 
 .text-sumary{

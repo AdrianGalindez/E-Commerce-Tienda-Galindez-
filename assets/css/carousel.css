@@ -1,11 +1,10 @@
 /*============================== carousel ============================*/
-/* Carousel Mejorado */
-.container-carousel {
+/* .container-carousel {
     border-bottom: 5px solid var(--warm-tan);
 }
 
 .carousel-caption {
-    background: rgba(49, 27, 20, 0.7); /* Transparencia con el café oscuro */
+    background: rgba(49, 27, 20, 0.7); 
     border-radius: 15px;
     padding: 20px;
     border-left: 5px solid var(--accent-orange);
@@ -16,7 +15,6 @@
     font-weight: bold;
 }
 
-/* Cards de productos */
 .container-cards {
     display: flex;
     justify-content: center;
@@ -49,7 +47,6 @@
     color: var(--primary-dark);
 }
 
-/* Botones y Tablas */
 .thead-dark th {
     background-color: var(--primary-dark) !important;
     color: var(--warm-tan) !important;
@@ -66,11 +63,128 @@
 }
 
 .carousel-item{
-    height: 400px;   /* altura fija del carrusel */
+    height: 400px;  
 }
 
 .carousel-item img{
     height: 100%;
     width: 100%;
-    object-fit: cover;   /* magia real */
+    object-fit: cover;   
+} */
+
+
+/*============================== carousel ============================*/
+
+.container-carousel {
+    border-bottom: 5px solid var(--warm-tan);
+    max-width: 1200px;
+    margin: auto;
+    transition: transform 0.3s ease;
+}
+
+/* hover suave en todo el carrusel */
+.container-carousel:hover {
+    transform: scale(1.01);
+}
+
+/* ITEM DEL CARRUSEL */
+.carousel-item {
+    height: 400px;
+    overflow: hidden;
+}
+
+/* IMAGEN */
+.carousel-item img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+
+    /* suavidad */
+    transition: transform 0.5s ease;
+}
+
+/* zoom suave en hover del slide */
+.carousel-item:hover img {
+    transform: scale(1.03);
+}
+
+/* CAPTION */
+.carousel-caption {
+    background: rgba(49, 27, 20, 0.7);
+    border-radius: 15px;
+    padding: 20px;
+    border-left: 5px solid var(--accent-orange);
+
+    /* mejora leve sin cambiar diseño */
+    backdrop-filter: blur(2px);
+}
+
+.carousel-caption h5 {
+    color: var(--warm-tan);
+    font-weight: bold;
+}
+
+/*============================== CARDS ============================*/
+
+.container-cards {
+    display: flex;
+    justify-content: center;
+    padding: 40px 0;
+    background-color: var(--light-bg);
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* CARD MEJORADA SIN ROMPER BOOTSTRAP */
+.card {
+    border: 1px solid var(--warm-tan);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* hover más limpio */
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(49, 27, 20, 0.2);
+}
+
+.card-title {
+    color: var(--primary-dark);
+    font-weight: bold;
+}
+
+/* links */
+.card-link {
+    color: var(--accent-orange);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.card-link:hover {
+    color: var(--primary-dark);
+}
+
+/* imagen cards (si aplica en otro CSS puedes ignorarlo) */
+.card-img-top {
+    transition: transform 0.3s ease;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+/*============================== TABLAS ============================*/
+
+.thead-dark th {
+    background-color: var(--primary-dark) !important;
+    color: var(--warm-tan) !important;
+}
+
+/*============================== UTILIDADES ============================*/
+
+.text-gradient {
+    color: var(--accent-orange);
+    font-weight: bold;
 }

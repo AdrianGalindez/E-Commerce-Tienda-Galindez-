@@ -1,46 +1,105 @@
 .container-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px 40px;
-    align-items: stretch; 
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* Card más limpia */
-.card{
-    border-radius: 12px;
-    transition: 0.2s ease;
-    margin-top: 5%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+/* ================= CARD MODERNA ================= */
+
+
+ .card {
+    width: 100%;
+    max-width: 220px;
+    min-width: 180px;
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
-.card-body{
-    flex-grow: 1;
+/* Hover más limpio y moderno */
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.15);
 }
+
+.card-body {
+    padding: 10px 10px;
+}
+
+
 
 .card-img-top {
     width: 100%;
-    height: 200px;       /* Ajusta al tamaño que necesites */
-    object-fit: cover;   /* Evita que la imagen se distorsione */
+    height: 120px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
 }
+
+/* zoom suave en hover */
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
 /* Efecto hover tipo e-commerce */
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0px 10px 20px rgba(0,0,0,0.15);
 }
 
-.card-title{
+
+
+.card-title {
+
+    font-size: 1rem;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 5px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.card-text{
+
+
+.card-text {
+    font-size: 0.875rem;
+    color: #666;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2; /* estándar */
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
+}
+
+
+@media (max-width: 1400px) {
+    .container-cards {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (max-width: 1200px) {
+    .container-cards {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .container-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .container-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .container-cards {
+        grid-template-columns: 1fr;
+    }
 }

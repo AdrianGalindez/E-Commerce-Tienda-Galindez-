@@ -1,0 +1,203 @@
+
+/* ================= NAVBAR MODERNA ================= */
+
+:root {
+    --primary-dark: #311b14;
+    --accent-orange: #d85c32;
+    --warm-tan: #d58d51;
+    --light: #ffffff;
+}
+
+/* Navbar base */
+.navbar {
+    background-color: var(--primary-dark) !important;
+    border-bottom: 3px solid var(--accent-orange);
+    padding: 12px 18px;
+    transition: all 0.3s ease;
+}
+
+/* Brand */
+.navbar-brand {
+    color: var(--light) !important;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.navbar-brand:hover {
+    color: var(--warm-tan) !important;
+}
+
+/* Links */
+.nav-link {
+    color: rgba(255,255,255,0.85) !important;
+    font-weight: 500;
+    margin: 0 4px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+/* Hover con subrayado animado */
+.nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background: var(--warm-tan);
+    transition: width 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--warm-tan) !important;
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* Dropdown */
+.dropdown-menu {
+    border: none;
+    border-radius: 10px;
+    padding: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+}
+
+.dropdown-item {
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background-color: var(--accent-orange);
+    color: white;
+}
+
+/* Search */
+.form-control {
+    border-radius: 8px;
+    border: none;
+    padding: 8px 12px;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 0 2px rgba(216,92,50,0.4);
+}
+
+/* Botón logout */
+.btn-danger {
+    border-radius: 8px;
+    font-size: 0.85rem;
+    padding: 6px 10px;
+}
+
+/* Responsive fix spacing */
+@media (max-width: 991px) {
+    .navbar-nav {
+        margin-top: 10px;
+    }
+
+    .nav-link {
+        padding: 8px 0;
+    }
+}
+
+
+
+
+
+
+/* ================= PROFILE DROPDOWN ================= */
+
+
+
+/* Botón principal */
+.dropdown .btn {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    padding: 6px 12px;
+}
+
+/* hover del botón */
+.dropdown .btn:hover {
+    background-color: var(--accent-orange);
+    border-color: var(--accent-orange);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* icono */
+.dropdown .btn i {
+    font-size: 18px;
+}
+
+/* menú desplegable */
+.dropdown-menu {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+    min-width: 200px;
+}
+
+/* items */
+.dropdown-item {
+    border-radius: 8px;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+/* hover items */
+.dropdown-item:hover {
+    background-color: rgba(214, 92, 50, 0.1);
+    color: var(--primary-dark);
+    transform: translateX(4px);
+}
+
+/* iconos dentro del menú */
+.dropdown-item i {
+    color: var(--accent-orange);
+}
+
+/* logout en rojo más fuerte */
+.dropdown-item.text-danger {
+    color: #dc3545 !important;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+
+@media (max-width: 991px) {
+    .dropdown {
+        width: 100%;
+    }
+
+    .dropdown .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+
+@media (max-width: 991px) {
+    .navbar-collapse {
+        padding-top: 10px;
+    }
+
+    .navbar-nav {
+        gap: 8px;
+    }
+
+    .d-flex.flex-column {
+        width: 100%;
+    }
+}
