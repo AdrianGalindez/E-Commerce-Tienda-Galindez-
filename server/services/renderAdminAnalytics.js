@@ -1,4 +1,4 @@
 const axios = require('axios');
 
 
-exports.renderAdminAnalytics = (req, res) => { res.render('AdminAnalytics'); };
+exports.renderAdminAnalytics = (req, res) => { res.render('admin/analytics/AdminAnalytics'); };

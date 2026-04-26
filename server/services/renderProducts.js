@@ -18,7 +18,7 @@ exports.product_detail = async (req, res) => {
         ]);
         const product = productRes.data;
         const reviews = reviewsRes.data;
-        res.render('product_detail', { product, reviews });
+        res.render('client/products/product_detail', { product, reviews });
     } catch (err) {
         res.send(err);
     }
@@ -30,7 +30,7 @@ exports.create_product = (req, res) => {
     axios.post('http://localhost:3000/api/productos', req.body)
         .then(response => {
             console.log("PRODUCTO======================:", req.body);
-            res.redirect('/create-producto');
+            res.redirect('admin/products/create-producto');
         })
         .catch(err => res.send(err));
 };
@@ -62,7 +62,7 @@ exports.read_products = (req, res) => {
     axios.get('http://localhost:3000/api/productos')
         .then(response => {
             console.log("read PRODUCTOS:", response.data);
-            res.render('read_products', { productos: response.data });
+            res.render('admin/products/read_products', { productos: response.data });
         })
         .catch(err => res.send(err));
 };
@@ -85,7 +85,7 @@ exports.update_products = async (req, res) => {
             axios.get('http://localhost:3000/api/proveedores')
         ]);
 
-        res.render('update_products', {
+        res.render('admin/products/update_products', {
             producto,
             marcas: marcasRes.data,
             categorias: categoriasRes.data,
@@ -102,7 +102,7 @@ exports.update_products = async (req, res) => {
 exports.delete_product = (req, res) => {
     axios.delete(`http://localhost:3000/api/productos/${req.params.id}`)
         .then(response => {
-             res.redirect('/read-producto');
+             res.redirect('admin/products/read-producto');
         })
         .catch(err => res.send(err));
 };

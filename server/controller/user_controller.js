@@ -8,8 +8,6 @@ exports.create = async (req, res) => {
         console.log("Creando usuario con datos:", req.body);
         let { nombre, email,password, telefono, direccion, genero, barrio, ciudad, puntoReferencia, ubicacion } = req.body;
 
-
-        
         // Validar campos obligatorios
         if (!nombre || !email || !telefono || !direccion || !password) {
             return res.status(400).json({

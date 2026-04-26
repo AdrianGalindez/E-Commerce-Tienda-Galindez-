@@ -3,7 +3,7 @@ const axios = require('axios');
 exports.create_user_form = async (req, res) => {
     try {
         const rolesRes = await axios.get('http://localhost:3000/api/roles');
-        res.render('add_user', { roles: rolesRes.data });
+        res.render('admin/users/add_user', { roles: rolesRes.data });
     } catch (err) { res.send(err); }
 };
 

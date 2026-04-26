@@ -181,7 +181,7 @@ exports.car = async (req, res) => {
             total: 0
         };
 
-        res.render('car', {
+        res.render('client/cart/cart', {
             productosCarrito: cart.items,
             subtotal: cart.total
         });

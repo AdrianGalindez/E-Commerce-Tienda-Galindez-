@@ -12,7 +12,7 @@ exports.payment_point = (req, res) => {
 };
 
 exports.billing_point = (req, res) => {
-    res.render('Billing_point', {
+    res.render('admin/home/Billing_point', {
         user: req.session.user
     });
 }

@@ -12,6 +12,6 @@ exports.car = async (req, res) => {
         });
 
         const subtotal = productosCarrito.reduce((sum, p) => sum + (p.precio || 0) * p.cantidad, 0);
-        res.render('car', { productosCarrito, subtotal });
+        res.render('client/cart/cart', { productosCarrito, subtotal });
     } catch (err) { res.send(err.message); }
 };

@@ -2,5 +2,5 @@ const axios = require('axios');
 
 
 exports.login = (req, res) => {
-    res.render('login');
+    res.render('client/auth/login');
 };

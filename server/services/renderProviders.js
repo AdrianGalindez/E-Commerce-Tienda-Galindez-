@@ -2,7 +2,7 @@ const axios = require('axios');
 
 // ==================== PROVEEDORES ======================
 exports.create_provider_form = (req, res) => {
-    res.render('create_proveedor');
+    res.render('admin/providers/create_proveedor');
 };
 
 exports.create_provider = (req, res) => {
@@ -21,7 +21,7 @@ exports.create_provider = (req, res) => {
 exports.read_providers = (req, res) => {
     axios.get('http://localhost:3000/api/proveedores')
         .then(response => {
-            res.render('read_providers', { providers: response.data });
+            res.render('admin/providers/read_providers', { providers: response.data });
         })
         .catch(err => res.send(err));
 };
@@ -32,7 +32,7 @@ exports.edit_provider_form = async (req, res) => {
         const id = req.query.id; // ejemplo: /update-proveedor?id=123
         const response = await axios.get(`http://localhost:3000/api/proveedores/${id}`);
         const provider = response.data;
-        res.render('update_provider', { provider }); // renderiza el EJS con los datos
+        res.render('admin/providers/update_provider', { provider }); // renderiza el EJS con los datos
     } catch (err) {
         console.error("ERROR EDIT PROVIDER FORM:", err.message);
         res.send(err.message);
@@ -58,7 +58,7 @@ exports.update_provider_data = async (req, res) => {
 exports.update_provider = (req, res) => {
     axios.get('http://localhost:3000/api/proveedores', { params: { id: req.query.id }})
         .then(response => {
-            res.render('update_provider', { provider: response.data });
+            res.render('/admin/providers/update_provider', { provider: response.data });
         })
         .catch(err => res.send(err));
 };

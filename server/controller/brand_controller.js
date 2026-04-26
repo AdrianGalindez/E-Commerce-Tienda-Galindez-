@@ -32,7 +32,7 @@ exports.getBrandForEdit = async (req, res) => {
         if (!brand) {
             return res.status(404).send("Marca no encontrada");
         }
-        res.render('update_brands', { brand }); 
+        res.render('admin/brands/update_brands', { brand }); 
     } catch (err) {
         res.status(500).send(err);
     }
@@ -40,7 +40,7 @@ exports.getBrandForEdit = async (req, res) => {
 
 exports.update = (req,res)=>{
     Brand_db.findByIdAndUpdate(req.params.id, req.body)
-        .then(data =>res.redirect('/read-marca'))
+        .then(data =>res.redirect('/admin/brands/read-brands'))
         .catch(err => res.status(500).send(err))
 }
 
