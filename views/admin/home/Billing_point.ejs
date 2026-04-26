@@ -1,0 +1,279 @@
+<!-- include header -->
+<%- include('../../include/_headerAdmin') %>
+
+<div class="checkout-wrapper">
+
+    <div class="checkout-header">
+        <h1><i class="fas fa-cash-register"></i> Punto de Facturación</h1>
+        <div class="badge-secure">
+            <i class="fas fa-store"></i> Modo cajero · Venta directa
+        </div>
+    </div>
+
+    <div class="checkout-grid">
+
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="form-card">
+
+            <div class="section-title">
+                <i class="fas fa-barcode"></i>
+                <span>Registrar producto</span>
+            </div>
+
+            <!-- BUSCADOR -->
+            <div class="input-group">
+                <label>Buscar producto</label>
+                <input type="text"  id="buscarProducto" placeholder="escribir nombre">
+            </div>
+
+            <!-- DATOS PRODUCTO -->
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Producto</label>
+                    <input type="text" id="productoNombre" placeholder="Arroz Florecita">
+                    <input type="hidden" id="productoId">
+
+                </div>
+
+                <div class="input-group">
+                    <label>Cantidad</label>
+                    <input id="cantidad" type="number" value="1">
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label>Precio</label>
+                    <input id="precio" type="number" value="45000">
+                </div>
+
+                <!-- <div class="input-group">
+                    <label>Descuento</label>
+                    <input type="number" value="0">
+                </div> -->
+            </div>
+
+            <button class="pay-btn" style="margin-top:10px" onclick="agregarProducto()" >
+                <i class="fas fa-plus"></i> Agregar a la venta
+            </button>
+
+            <div class="divider"></div>
+
+            <!-- LISTA PRODUCTOS VENTA -->
+            <div class="section-title">
+                <i class="fas fa-cart-shopping"></i>
+                <span>Productos en la venta</span>
+            </div>
+
+            <div class="order-items-list" id="listaProductos">
+                     <!-- lista de productos agregados a la venta -->
+
+            </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="summary-card">
+
+            <div class="section-title">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <span>Resumen de factura</span>
+            </div>
+
+            <div class="summary-line">
+                <span>Subtotal</span>
+                <span id="subtotal">$134.990</span>
+            </div>
+
+            <div class="summary-line">
+                <span>IVA</span>
+                <span id="iva">$25.648</span>
+            </div>
+
+            <div class="summary-line total">
+                <span>Total</span>
+                <span id="total">$160.638</span>
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- METODO DE PAGO -->
+            <div class="section-title" style="font-size:1.2rem;">
+                <i class="fas fa-credit-card"></i>
+                <span>Método de pago</span>
+            </div>
+
+            <div class="methods-group">
+
+                <div class="method-option selected">
+                    <input type="radio" checked>
+                    <label>
+                        <i class="fas fa-money-bill-wave"></i>
+                        Efectivo
+                    </label>
+                </div>
+
+                <div class="method-option">
+                    <input type="radio">
+                    <label>
+                        <i class="fas fa-credit-card"></i>
+                        Tarjeta
+                    </label>
+                </div>
+
+                <div class="method-option">
+                    <input type="radio">
+                    <label>
+                        <i class="fas fa-mobile-alt"></i>
+                        Transferencia
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="divider"></div>
+
+            <!-- ACCIONES -->
+           <button class="pay-btn" onclick="finalizarVenta()">
+              <i class="fas fa-check"></i> Finalizar venta
+           </button>
+
+            <button class="btn-outline" style="width:100%; margin-top:10px;">
+                <i class="fas fa-trash"></i> Cancelar venta
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+let carrito = []
+
+function agregarProducto(){
+
+    const id = document.getElementById("productoId").value
+    const nombre = document.getElementById("productoNombre").value
+    const precio = parseFloat(document.getElementById("precio").value)
+    const cantidad = parseInt(document.getElementById("cantidad").value)
+
+    const subtotal = precio * cantidad
+
+    carrito.push({
+        producto: id,
+        nombre: nombre,
+        precio: precio,
+        cantidad: cantidad,
+        subtotal: subtotal
+    })
+
+    renderCarrito()
+
+
+
+}
+
+async function finalizarVenta(){
+
+    if(carrito.length === 0){
+        alert("No hay productos en la venta")
+        return
+    }
+
+    const productos = carrito.map(p => ({
+        producto: p.producto,
+        cantidad: p.cantidad
+    }))
+
+    const data = {
+        cliente: "<%= user._id %>", // o el cliente logueado
+        productos: productos
+    }
+
+    const res = await fetch("/api/ventas",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify(data)
+    })
+
+    const venta = await res.json()
+
+    alert("Venta realizada correctamente")
+
+    carrito = []
+
+    renderCarrito()
+
+    window.location = "/checkout/confirmacion/" + venta._id
+}
+
+document.getElementById("buscarProducto").addEventListener("keyup", async function(){
+
+    const texto = this.value
+
+    const res = await fetch("/api/productos")
+
+    const productos = await res.json()
+
+    const encontrado = productos.find(p => 
+        p.nombre.toLowerCase().includes(texto.toLowerCase())
+    )
+
+    if(encontrado){
+
+        document.getElementById("productoId").value = encontrado._id
+        document.getElementById("productoNombre").value = encontrado.nombre
+        document.getElementById("precio").value = encontrado.precio
+
+    }
+
+})
+function calcularTotales(subtotal){
+
+    const iva = subtotal * 0.19
+    const total = subtotal + iva
+
+    document.getElementById("subtotal").innerText = "$" + subtotal.toFixed(2)
+    document.getElementById("iva").innerText = "$" + iva.toFixed(2)
+    document.getElementById("total").innerText = "$" + total.toFixed(2)
+}
+
+function renderCarrito(){
+
+    const lista = document.getElementById("listaProductos")
+    lista.innerHTML = ""
+
+    let subtotal = 0
+
+    carrito.forEach(item => {
+
+        subtotal += item.subtotal
+
+        lista.innerHTML += `
+        <div class="order-item">
+
+            <div class="item-icon">
+                <i class="fas fa-box"></i>
+            </div>
+
+            <div class="item-details">
+                <div class="item-title">${item.nombre}</div>
+                <div class="item-price">$${item.precio}</div>
+                <div class="item-quantity">Cantidad: ${item.cantidad}</div>
+            </div>
+
+            <div class="item-line-price">$${item.subtotal}</div>
+
+        </div>
+        `
+    })
+
+    calcularTotales(subtotal)
+}
+</script>
+<!-- include footer -->
+<%- include('../../include/_footerAdmin') %>

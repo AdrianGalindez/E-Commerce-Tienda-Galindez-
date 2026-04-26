@@ -1,0 +1,55 @@
+<%- include('../../include/_headerAdmin') %>
+
+<main>
+
+<h1>Actualizar Usuario</h1>
+
+<form action="/update-user/<%= user._id %>" method="POST">
+
+<div>
+<label>Nombre</label>
+<input type="text" name="nombre" value="<%= user.nombre %>" required>
+</div>
+
+<div>
+<label>Email</label>
+<input type="email" name="email" value="<%= user.email %>" readonly>
+</div>
+
+<div>
+<label>Teléfono</label>
+<input type="text" name="telefono" value="<%= user.telefono %>">
+</div>
+
+<div>
+<label>Dirección</label>
+<input type="text" name="direccion" value="<%= user.direccion %>">
+</div>
+
+<div>
+<label>Género</label>
+<input type="text" name="genero" value="<%= user.genero %>">
+</div>
+
+<div>
+<label>Barrio</label>
+<input type="text" name="barrio" value="<%= user.barrio %>">
+</div>
+
+<div>
+<label>Ciudad</label>
+<input type="text" name="ciudad" value="<%= user.ciudad %>">
+</div>
+
+<div>
+<label>Punto de referencia</label>
+<input type="text" name="puntoReferencia" value="<%= user.puntoReferencia %>">
+</div>
+
+<button type="submit">Actualizar</button>
+
+</form>
+
+</main>
+
+<%- include('../../include/_footerAdmin') %>

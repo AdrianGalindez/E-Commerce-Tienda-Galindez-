@@ -1,0 +1,73 @@
+
+<!-- include header -->
+<%- include('../../include/_headerAdmin') %>
+<!-- /include header -->
+
+  <!-- Main Site -->
+<main id="site-main">
+
+    <h1 class="mb-4">Formulario Principal - Crear Usuario</h1>
+    
+    <div class="container mt-5">
+        
+        <form action="/add-user" method="POST">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" id="telefono" name="telefono" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="genero" class="form-label">Género</label>
+                <select class="form-select" id="genero" name="genero">
+                    <option value="">Seleccione...</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input type="text" class="form-control" id="direccion" name="direccion" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="barrio" class="form-label">Barrio</label>
+                <input type="text" class="form-control" id="barrio" name="barrio">
+            </div>
+
+            <div class="mb-3">
+                <label for="ciudad" class="form-label">Ciudad</label>
+                <input type="text" class="form-control" id="ciudad" name="ciudad" value="Bogotá">
+            </div>
+
+            <div class="mb-3">
+                <label for="puntoReferencia" class="form-label">Punto de Referencia</label>
+                <input type="text" class="form-control" id="puntoReferencia" name="puntoReferencia">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Estado</label>
+                <input type="text" class="form-control" name="estado" value="Activo" readonly>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crear Usuario</button>
+        </form>
+    </div>
+
+</main>
+<!-- /Main Site -->
+
+<!-- include footer -->
+<%- include('../../include/_footerAdmin') %>
+<!-- /include footer -->

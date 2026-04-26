@@ -6,18 +6,15 @@ const path = require('path');
 const connectDB = require('./server/database/connection');
 const Categorydb = require('./server/model/categories');
 const methodOverride = require('method-override');
-const session = require('express-session');
 const seedAdmin = require('./server/config/seedAdmin');
+const sessionConfig = require('./server/config/session');
 dotenv.config( { path : 'config.env'} )
 
 const app = express();
-app.use(session({
-    secret: "tienda-galindez",
-    resave: false,
-    saveUninitialized: false
-}));
+app.use(sessionConfig);
 app.use(express.json());
 app.use(methodOverride('_method'));
+
 // parse request to body-parser
 app.use(bodyparser.urlencoded({ extended : true}))
 app.use(express.static(path.join(__dirname, 'public')));
@@ -51,7 +48,7 @@ app.use(async (req, res, next) => {
 
 // set view engine
 app.set("view engine", "ejs")
-//app.set("views", path.resolve(__dirname, "views/ejs"))
+app.set("views", path.resolve(__dirname, "views"))
 
 
 // load assets
