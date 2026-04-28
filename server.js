@@ -1,5 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
+dotenv.config( { path : 'config.env'} )
 const morgan = require('morgan');
 const bodyparser = require("body-parser");
 const path = require('path');
@@ -8,13 +9,17 @@ const Categorydb = require('./server/model/categories');
 const methodOverride = require('method-override');
 const seedAdmin = require('./server/config/seedAdmin');
 const sessionConfig = require('./server/config/session');
-dotenv.config( { path : 'config.env'} )
+
 
 const app = express();
 app.use(sessionConfig);
 app.use(express.json());
 app.use(methodOverride('_method'));
-
+app.use((req, res, next) => {
+    console.log("🍪 SESSION ID GLOBAL:", req.sessionID);
+    console.log("🍪 CART GLOBAL:", req.session.cart);
+    next();
+});
 // parse request to body-parser
 app.use(bodyparser.urlencoded({ extended : true}))
 app.use(express.static(path.join(__dirname, 'public')));
