@@ -1,0 +1,41 @@
+<%- include('../include/_header') %>
+
+<div class="container mt-4">
+
+    <div class="row">
+
+        <!-- SIDEBAR -->
+        <div class="col-md-3">
+            <%- include('./partials/sidebar', { user }) %>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="col-md-9">
+
+            <h3>Mi perfil</h3>
+
+            <div class="card p-3">
+
+                <h5>Información personal</h5>
+
+                <p><strong>Nombre:</strong> <%= user.nombre %></p>
+                <p><strong>Email:</strong> <%= user.email %></p>
+                <p><strong>Teléfono:</strong> <%= user.telefono %></p>
+                <p><strong>Dirección:</strong> <%= user.direccion %></p>
+                <p><strong>Ciudad:</strong> <%= user.ciudad %></p>
+
+                <hr>
+
+                <a href="/user/edit/<%= user._id %>" class="btn btn-primary">
+                    Editar perfil
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<%- include('../include/_footer') %>

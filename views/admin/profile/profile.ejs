@@ -1,0 +1,54 @@
+<%- include('../include/_header') %>
+
+<div class="container mt-4">
+
+    <div class="row">
+
+        <!-- SIDEBAR ADMIN -->
+        <div class="col-md-3">
+            <div class="list-group">
+
+                <a href="/admin/users" class="list-group-item">Usuarios</a>
+                <a href="/admin/products" class="list-group-item">Productos</a>
+                <a href="/admin/orders" class="list-group-item">Pedidos</a>
+
+            </div>
+        </div>
+
+        <!-- DASHBOARD -->
+        <div class="col-md-9">
+
+            <h3>Panel Admin</h3>
+
+            <div class="row">
+
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <h5>Usuarios</h5>
+                        <p>Total registrados</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <h5>Productos</h5>
+                        <p>En catálogo</p>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <h5>Ventas</h5>
+                        <p>Resumen general</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<%- include('../include/_footer') %>

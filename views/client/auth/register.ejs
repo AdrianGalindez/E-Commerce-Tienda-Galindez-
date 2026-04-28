@@ -1,31 +1,97 @@
-<h2>Registro</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <link rel="stylesheet" href="/css/register.css">
+</head>
+<body>
 
-<form action="/register" method="POST">
+<div class="container">
 
-    <input type="text" name="nombre" placeholder="Nombre completo" required>
+    <!-- LADO IZQUIERDO -->
+    <div class="left">
+        <div class="form-box">
 
-    <input type="email" name="email" placeholder="Email" required>
+            <p class="description">
+                Crea tu cuenta en Tienda Galíndez y comienza a disfrutar de una experiencia de compra personalizada.
+            </p>
 
-    <input type="password" name="password" placeholder="Contraseña" required>
+            <h3>Crear Cuenta</h3>
 
-    <input type="text" name="telefono" placeholder="Teléfono" required>
+            <form action="/register" method="POST">
 
-    <input type="text" name="direccion" placeholder="Dirección" required>
+                <div class="input-group">
+                    <span class="icon">👤</span>
+                    <input type="text" name="nombre" placeholder="Nombre completo" required>
+                </div>
 
-    <input type="text" name="barrio" placeholder="Barrio">
+                <div class="input-group">
+                    <span class="icon">📧</span>
+                    <input type="email" name="email" placeholder="Correo electrónico" required>
+                </div>
 
-    <input type="text" name="ciudad" placeholder="Ciudad">
+                <div class="input-group">
+                    <span class="icon">🔒</span>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                </div>
 
-    <input type="text" name="puntoReferencia" placeholder="Punto de referencia">
+                <div class="input-group">
+                    <span class="icon">📱</span>
+                    <input type="text" name="telefono" placeholder="Teléfono" required>
+                </div>
 
-    <select name="genero">
-        <option value="">Género</option>
-        <option value="Masculino">Masculino</option>
-        <option value="Femenino">Femenino</option>
-    </select>
+                <div class="input-group">
+                    <span class="icon">🏠</span>
+                    <input type="text" name="direccion" placeholder="Dirección" required>
+                </div>
 
-    <button type="submit">Registrarse</button>
+                <div class="input-group">
+                    <span class="icon">📍</span>
+                    <input type="text" name="barrio" placeholder="Barrio">
+                </div>
 
-</form>
+                <div class="input-group">
+                    <span class="icon">🏙️</span>
+                    <input type="text" name="ciudad" placeholder="Ciudad">
+                </div>
 
-<p>¿Ya tienes cuenta? <a href="/login">Inicia sesión</a></p>
+                <div class="input-group">
+                    <span class="icon">📌</span>
+                    <input type="text" name="puntoReferencia" placeholder="Punto de referencia">
+                </div>
+
+                <div class="input-group">
+                    <span class="icon">⚧</span>
+                    <select name="genero">
+                        <option value="">Género</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn">Registrarse</button>
+
+            </form>
+
+            <p class="register">
+                ¿Ya tienes cuenta?
+                <a href="/login">Inicia sesión</a>
+            </p>
+
+        </div>
+    </div>
+
+    <!-- LADO DERECHO -->
+    <div class="right">
+        <h1>TIENDA<br>GALINDEZ</h1>
+
+        <div class="illustration">
+            <img src="assets/img/store.png" alt="store">
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

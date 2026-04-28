@@ -1,61 +1,100 @@
 <%- include('../../include/_headerAdmin') %>
 
-<h1>Editar Producto</h1>
+<div class="page-wrapper">
 
-<form action="/api/productos/<%= producto._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
-
-  <!-- NOMBRE -->
-  <label>Nombre</label>
-  <input type="text" name="nombre" value="<%= producto.nombre %>" />
-
-  <!-- DESCRIPCIÓN -->
-  <label>Descripción</label>
-  <textarea name="descripcion"><%= producto.descripcion %></textarea>
-
-  <!-- PRECIOS -->
-  <label>Precio Costo</label>
-  <input type="number" name="precioCosto" value="<%= producto.precioCosto %>" />
-
-  <label>Venta</label>
-  <input type="number" name="precio" value="<%= producto.precio %>" />
-
-  <!-- STOCK -->
-  <label>Stock</label>
-  <input type="number" name="stock" value="<%= producto.stock %>" />
-
-  <!-- ================= IMÁGENES ================= -->
-  <h3>Imágenes actuales</h3>
-
-  <div style="display:flex; gap:10px; flex-wrap:wrap;">
-    <% if(producto.fotos && producto.fotos.length > 0){ %>
-      <% producto.fotos.forEach(function(foto, index){ %>
-
-        <div>
-          <img src="<%= foto %>" width="100"><br>
-
-          <!-- Reemplazar imagen específica -->
-          <input type="file" name="foto_<%= index %>">
-
-          <!-- Eliminar -->
-          <label>
-            <input type="checkbox" name="eliminarFotos" value="<%= foto %>">
-            Eliminar
-          </label>
-        </div>
-
-      <% }) %>
-    <% } else { %>
-      <p>Sin imágenes</p>
-    <% } %>
+  <div class="page-header">
+    <h1>Editar Producto</h1>
+    <p>Actualiza la información del producto y gestiona sus imágenes</p>
   </div>
 
-  <!-- AGREGAR NUEVAS -->
-  <h3>Agregar nuevas imágenes</h3>
-  <input type="file" name="nuevasFotos" multiple>
+  <div class="form-card">
 
-  <br><br>
-  <button type="submit">Actualizar</button>
+    <form action="/api/productos/<%= producto._id %>?_method=PUT"
+          method="POST"
+          enctype="multipart/form-data"
+          class="product-form">
 
-</form>
+      <!-- GRID INFO -->
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label>Nombre</label>
+          <input type="text" name="nombre" value="<%= producto.nombre %>">
+        </div>
+
+        <div class="form-group full">
+          <label>Descripción</label>
+          <textarea name="descripcion" rows="4"><%= producto.descripcion %></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Precio costo</label>
+          <input type="number" name="precioCosto" value="<%= producto.precioCosto %>">
+        </div>
+
+        <div class="form-group">
+          <label>Precio venta</label>
+          <input type="number" name="precio" value="<%= producto.precio %>">
+        </div>
+
+        <div class="form-group">
+          <label>Stock</label>
+          <input type="number" name="stock" value="<%= producto.stock %>">
+        </div>
+
+      </div>
+
+      <!-- IMÁGENES -->
+      <div class="image-section">
+
+        <h2>Imágenes actuales</h2>
+
+        <div class="image-grid">
+
+          <% if(producto.fotos && producto.fotos.length > 0){ %>
+
+            <% producto.fotos.forEach(function(foto, index){ %>
+
+              <div class="image-card">
+
+                <img src="<%= foto %>" alt="producto">
+
+                <div class="image-actions">
+
+                  <input type="file" name="foto_<%= index %>">
+
+                  <label class="delete-check">
+                    <input type="checkbox" name="eliminarFotos" value="<%= foto %>">
+                    Eliminar
+                  </label>
+
+                </div>
+
+              </div>
+
+            <% }) %>
+
+          <% } else { %>
+            <p class="empty">Sin imágenes registradas</p>
+          <% } %>
+
+        </div>
+
+        <div class="upload-new">
+          <h3>Agregar nuevas imágenes</h3>
+          <input type="file" name="nuevasFotos" multiple>
+        </div>
+
+      </div>
+
+      <!-- BOTÓN -->
+      <div class="form-actions">
+        <button type="submit">Actualizar Producto</button>
+      </div>
+
+    </form>
+
+  </div>
+</div>
 
 <%- include('../../include/_footerAdmin') %>

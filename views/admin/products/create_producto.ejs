@@ -1,86 +1,98 @@
 <%- include('../../include/_headerAdmin') %>
 
-<h1>Crear Nuevo Producto</h1>
-<div class="container mt-4">
-    <form action="/api/productos" method="POST" enctype="multipart/form-data">
+<div class="page-wrapper">
+
+  <div class="page-header">
+    <h1>Crear Nuevo Producto</h1>
+    <p>Completa la información del producto para agregarlo al inventario</p>
+  </div>
+
+  <div class="form-card">
+
+    <form action="/api/productos" method="POST" enctype="multipart/form-data" class="product-form">
+
+      <!-- GRID PRINCIPAL -->
+      <div class="form-grid">
+
         <!-- Nombre -->
-        <div class="form-group">
-        <label for="nombre">Nombre del producto</label>
-        <input type="text" class="form-control" id="nombre" name="nombre" required>
+        <div class="form-group full">
+          <label>Nombre del producto</label>
+          <input type="text" name="nombre" required>
         </div>
 
         <!-- Descripción -->
-        <div class="form-group">
-            <label for="descripcion">Descripción</label>
-            <textarea 
-                class="form-control" 
-                id="descripcion" 
-                name="descripcion" 
-                rows="3"
-                placeholder="Describe el producto..."
-            ></textarea>
+        <div class="form-group full">
+          <label>Descripción</label>
+          <textarea name="descripcion" rows="4" placeholder="Describe el producto..."></textarea>
         </div>
-        
-        <!-- Precio de costo -->
+
+        <!-- Precio costo -->
         <div class="form-group">
-        <label for="precioCosto">Precio de costo (Inversión)</label>
-        <input type="number" step="0.01" class="form-control" id="precioCosto" name="precioCosto" required>
+          <label>Precio de costo</label>
+          <input type="number" step="0.01" name="precioCosto" required>
         </div>
 
         <!-- Precio venta -->
         <div class="form-group">
-        <label for="precio">Precio de venta</label>
-        <input type="number" step="0.01" class="form-control" id="precio" name="precio" required>
+          <label>Precio de venta</label>
+          <input type="number" step="0.01" name="precio" required>
         </div>
 
         <!-- Stock -->
         <div class="form-group">
-        <label for="stock">Stock</label>
-        <input type="number" class="form-control" id="stock" name="stock" required>
+          <label>Stock</label>
+          <input type="number" name="stock" required>
         </div>
 
         <!-- Categoría -->
         <div class="form-group">
-        <label for="categoria">Categoría</label>
-        <select class="form-control" id="categoria" name="categoria" required>
+          <label>Categoría</label>
+          <select name="categoria" required>
             <option value="">Seleccione una categoría</option>
             <% categorias.forEach(c => { %>
-            <option value="<%= c._id %>"><%= c.nombre %></option>
+              <option value="<%= c._id %>"><%= c.nombre %></option>
             <% }) %>
-        </select>
+          </select>
         </div>
 
         <!-- Marca -->
         <div class="form-group">
-        <label for="marca">Marca</label>
-        <select class="form-control" id="marca" name="marca" required>
+          <label>Marca</label>
+          <select name="marca" required>
             <option value="">Seleccione una marca</option>
             <% marcas.forEach(m => { %>
-            <option value="<%= m._id %>"><%= m.nombre %></option>
+              <option value="<%= m._id %>"><%= m.nombre %></option>
             <% }) %>
-        </select>
+          </select>
         </div>
 
-        <!-- Proveedor (opcional) -->
+        <!-- Proveedor -->
         <div class="form-group">
-        <label for="proveedor">Proveedor</label>
-        <select class="form-control" id="proveedor" name="proveedor">
+          <label>Proveedor</label>
+          <select name="proveedor">
             <option value="">Seleccione un proveedor</option>
             <% proveedores.forEach(p => { %>
-            <option value="<%= p._id %>"><%= p.nombre %></option>
+              <option value="<%= p._id %>"><%= p.nombre %></option>
             <% }) %>
-        </select>
+          </select>
         </div>
 
-        <!-- Imagen -->
-        <!-- Imágenes (máximo 4) -->
-        <div class="form-group">
-          <label for="fotos">Imágenes del producto (máx 4)</label>
-          <input type="file" class="form-control" id="fotos" name="fotos" multiple>
+        <!-- Imágenes -->
+        <div class="form-group full">
+          <label>Imágenes del producto (máx 4)</label>
+          <input type="file" name="fotos" multiple>
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Crear Producto</button>
+      </div>
+
+      <!-- BOTÓN -->
+      <div class="form-actions">
+        <button type="submit">Crear Producto</button>
+      </div>
+
     </form>
-    </div>
+
+  </div>
+</div>
 
 <%- include('../../include/_footerAdmin') %>
