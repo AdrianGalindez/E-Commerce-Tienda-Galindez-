@@ -5,7 +5,7 @@ exports.payment_point = (req, res) => {
         total: 0
     };
 
-    res.render('payment_point', {
+    res.render('client/payment/payment_point', {
         user: req.session.user,
         cart
     });

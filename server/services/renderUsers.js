@@ -24,14 +24,14 @@ exports.add_user = async (req, res) => {
 exports.read_users = async (req, res) => {
     try {
         const response = await axios.get('http://localhost:3000/api/users');
-        res.render('read_users', { users: response.data });
+        res.render('admin/users/read_users', { users: response.data });
     } catch (err) { res.send(err); }
 };
 
 exports.update_user = async (req, res) => {
     try {
         const response = await axios.get('http://localhost:3000/api/users/' + req.params.id);
-        res.render('update_user', { user: response.data });
+        res.render('admin/users/update_user', { user: response.data });
     } catch (err) { res.send(err); }
 };
 

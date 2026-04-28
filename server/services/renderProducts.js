@@ -48,7 +48,7 @@ exports.create_product_form = (req, res) => {
     ])
     .then(([marcasRes, categoriasRes, proveedoresRes]) => {
         console.log("PRODUCTO:", req.body);
-        res.render('create_producto', { 
+        res.render('admin/products/create_producto', { 
             marcas: marcasRes.data,
             categorias: categoriasRes.data,
             proveedores: proveedoresRes.data

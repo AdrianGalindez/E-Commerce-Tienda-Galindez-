@@ -58,7 +58,7 @@ exports.update_provider_data = async (req, res) => {
 exports.update_provider = (req, res) => {
     axios.get('http://localhost:3000/api/proveedores', { params: { id: req.query.id }})
         .then(response => {
-            res.render('/admin/providers/update_provider', { provider: response.data });
+            res.render('admin/providers/update_provider', { provider: response.data });
         })
         .catch(err => res.send(err));
 };

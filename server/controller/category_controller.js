@@ -2,31 +2,24 @@ const Categorydb = require('../model/categories');
 const Productdb = require('../model/product');
 // CREATE
 exports.create = async (req, res) => {
-
     try {
         if (!req.body.nombre) {
             return res.status(400).json({
                 message: "El nombre es obligatorio"
             });
         }
-
         // VALIDACIÓN DE DUPLICADO 
         const existe = await Categorydb.findOne({ nombre: req.body.nombre });
-
         if (existe) {
             return res.status(400).json({
                 message: "La categoría ya existe"
             });
         }
-
         const category = new Categorydb({
             nombre: req.body.nombre
         });
-
         const data = await category.save();
-
         res.status(201).json(data);
-
     } catch (err) {
         res.status(500).json({
             message: err.message
@@ -39,30 +32,21 @@ exports.create = async (req, res) => {
 exports.find = async (req, res) => {
 
     try {
-
         if (req.params.id) {
-
             const data = await Categorydb.findById(req.params.id);
-
             if (!data) {
                 return res.status(404).json({
                     message: "Categoría no encontrada"
                 });
             }
-
             return res.json(data);
         }
-
         const data = await Categorydb.find();
-
         res.json(data);
-
     } catch (err) {
-
         res.status(500).json({
             message: err.message
         });
-
     }
 };
 
@@ -114,7 +98,7 @@ exports.delete = async (req, res) => {
         });
 
     } catch (err) {
-        // 🔴 ESTE ES EL QUE DEBES MODIFICAR
+        // ESTE ES EL QUE DEBES MODIFICAR
         res.status(500).json({
             message: err.message
         });

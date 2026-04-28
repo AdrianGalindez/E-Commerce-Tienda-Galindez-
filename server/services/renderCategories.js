@@ -25,7 +25,7 @@ exports.category = (req, res) => {
 // ==================== CATEGORÍAS =======================
 
 exports.create_category_form = (req, res) => {
-    res.render('create_categoria'); // formulario simple, solo nombre
+    res.render('admin/categories/create_categoria'); // formulario simple, solo nombre
 };
 
 exports.create_category = (req, res) => {
@@ -33,7 +33,7 @@ exports.create_category = (req, res) => {
     axios.post('http://localhost:3000/api/categorias', req.body)
         .then(response => {
             console.log("BODY EN SERVICES:", req.body);
-            res.redirect('/admin/categories/create-categoria');
+            res.redirect('create-categoria');
         })
         .catch(err => {
             console.log(err);

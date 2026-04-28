@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 
 exports.create = async (req, res) => {
     try {
-        console.log("Creando usuario con datos:", req.body);
+        
         let { nombre, email,password, telefono, direccion, genero, barrio, ciudad, puntoReferencia, ubicacion } = req.body;
 
         // Validar campos obligatorios
@@ -143,4 +143,17 @@ exports.delete = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message || "Error eliminando el usuario." });
     }
+};
+
+
+
+
+// PERFIL DEL USUARIO LOGUEADO
+
+exports.getUserProfile = async (userId) => {
+    if (!userId) return null;
+
+    const user = await Userdb.findById(userId).populate('rol');
+
+    return user;
 };

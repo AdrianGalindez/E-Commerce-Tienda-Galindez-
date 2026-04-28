@@ -18,6 +18,8 @@ const servicesRenderHomeRutes = require('../services/renderHomeRoutes');
 const servicesRenderPromotions = require('../services/renderPromotions');
 const servicesRenderPaymentPoint = require('../services/RenderPaymentPoint');
 const servicesRenderAdminAnalytics = require('../services/renderAdminAnalytics');
+const servicesRenderProfile = require('../services/renderProfile');
+
 
 // controladores de la aplicación
 const userController = require('../controller/user_controller');
@@ -49,8 +51,12 @@ route.post('/login', authController.login);
 route.get('/login', servicesLoginLogout.login);
 route.get('/logout', authController.logout);
 
+// ======================== RENDER PERFIL =====================
+route.get('/perfil', servicesRenderProfile.profile);
+route.get('/admin/perfil', servicesRenderProfile.profile);
+
 // ======================== REGISTER =====================
-route.get('/register', (req, res) => res.render('register'));
+route.get('/register', (req, res) => res.render('client/auth/register'));
 route.post('/register', authController.register);
 
 //========================API PRODUCTOS=================

@@ -1,6 +1,5 @@
 const SaleDetaildb = require('../model/saleDetails');
 
-console.log("detailSales controller loaded");
 // CREATE
 exports.create = async (req, res) => {
 
