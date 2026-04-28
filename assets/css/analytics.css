@@ -1,6 +1,9 @@
 /* =============================
    PAGE
 ============================= */
+.fill {
+    width: var(--width);
+}
 
 .analytics-page{
     padding:40px;
