@@ -146,7 +146,34 @@ exports.delete = async (req, res) => {
 };
 
 
+// SEARCH USERS (NUEVO)
+exports.search = async (req, res) => {
+    try {
+        const search = (req.query.search || "").trim();
 
+        if (!search) {
+            return res.json([]);
+        }
+
+        const users = await Userdb.find({
+            estado: "Activo",
+            $or: [
+                { nombre: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } },
+                { telefono: { $regex: search, $options: "i" } }
+            ]
+        }).limit(10);
+
+        return res.json(users);
+
+    } catch (err) {
+        console.error("ERROR SEARCH USERS:", err);
+        return res.status(500).json({
+            message: "Error buscando usuarios",
+            error: err.message
+        });
+    }
+};
 
 // PERFIL DEL USUARIO LOGUEADO
 

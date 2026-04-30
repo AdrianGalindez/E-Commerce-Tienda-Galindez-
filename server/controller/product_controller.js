@@ -183,29 +183,34 @@ exports.delete = async (req, res) => {
 
 exports.searchApi = async (req, res) => {
     try {
+        console.log("QUERY:", req.query);
         const search = req.query.search;
 
-        if (!search || search.trim() === "") {
-            return res.status(400).send({ message: "Parámetro de búsqueda vacío" });
+        // 🔒 VALIDACIÓN
+        if (!search || search.trim().length < 2) {
+            return res.status(400).send({
+                message: "Mínimo 2 caracteres para buscar"
+            });
         }
 
+        // 🔥 QUERY OPTIMIZADO
         const productos = await Productdb.find({
-            $or: [
-                { nombre: { $regex: search, $options: 'i' } },
-                { descripcion: { $regex: search, $options: 'i' } }
-            ]
+            nombre: { $regex: search, $options: 'i' },
+            stock: { $gt: 0 } // 👈 solo productos disponibles
         })
-        .populate('marca')
-        .populate('categoria')
-        .populate('proveedor');
-        if (productos.length === 0) {
-            return res.send([]);
-        }
+        .select('nombre precio stock') // 👈 SOLO lo necesario
+        .limit(10) // 👈 CLAVE PARA PERFORMANCE
+        .lean();
+
         res.send(productos);
 
     } catch (err) {
+
         console.error("ERROR SEARCH API:", err);
-        res.status(500).send({ message: err.message });
+
+        res.status(500).send({
+            message: "Error en búsqueda de productos"
+        });
     }
 };
 

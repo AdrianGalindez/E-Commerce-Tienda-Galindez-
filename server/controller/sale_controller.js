@@ -1,129 +1,266 @@
+const mongoose = require('mongoose');
 const Saledb = require('../model/sales');
 const SaleDetaildb = require('../model/saleDetails');
 const Productdb = require('../model/product');
 
+
+
+// CREATE (CON TRANSACCIÓN REAL)
 exports.create = async (req, res) => {
+    const session = await mongoose.startSession();
+
     try {
+        session.startTransaction();
+
         const { cliente, productos } = req.body;
-        if (!cliente || !productos || productos.length === 0) {
-            return res.status(400).send({ message: "Datos incompletos" });
+
+        // 🔒 VALIDACIONES FUERTES
+        if (!cliente || !Array.isArray(productos) || productos.length === 0) {
+            await session.abortTransaction();
+            return res.status(400).send({ message: "Datos inválidos" });
         }
+
         let total = 0;
         const detalles = [];
+
+        // PROCESAMIENTO SEGURO
         for (let item of productos) {
-            const productoDB = await Productdb.findById(item.producto);
-            if (!productoDB) {
-                return res.status(404).send({ message: "Producto no encontrado" });
-            }
-            if (productoDB.stock < item.cantidad) {
+
+            if (!item.producto || item.cantidad <= 0) {
+                await session.abortTransaction();
                 return res.status(400).send({
-                    message: `Stock insuficiente para ${productoDB.nombre}`
+                    message: "Producto o cantidad inválida"
                 });
             }
-            const subtotal = productoDB.precio * item.cantidad;
+
+            // UPDATE ATÓMICO (EVITA OVERSELLING)
+            const producto = await Productdb.findOneAndUpdate(
+                {
+                    _id: item.producto,
+                    stock: { $gte: item.cantidad }
+                },
+                {
+                    $inc: { stock: -item.cantidad }
+                },
+                {
+                    new: true,
+                    session
+                }
+            );
+
+            if (!producto) {
+                await session.abortTransaction();
+                return res.status(400).send({
+                    message: "Stock insuficiente o producto no existe"
+                });
+            }
+
+            const subtotal = producto.precio * item.cantidad;
             total += subtotal;
+
             detalles.push({
                 producto: item.producto,
                 cantidad: item.cantidad,
-                precioUnitario: productoDB.precio,
-                subtotal: subtotal
+                precioUnitario: producto.precio,
+                subtotal
             });
-            // ACTUALIZAR STOCK
-            productoDB.stock -= item.cantidad;
-            await productoDB.save();
         }
-        // Crear venta
-        const venta = new Saledb({
+
+        // CREAR VENTA
+        const [venta] = await Saledb.create([{
             cliente,
             total
-        });
-        const ventaGuardada = await venta.save();
-        // 🛡️ VALIDACIÓN NUEVA (EVITA TU ERROR ACTUAL)
-        if (!ventaGuardada || !ventaGuardada._id) {
-            return res.status(500).send({
-                message: "Error: la venta no se pudo crear correctamente"
-            });
-        }
-        // Guardar detalles
-        for (let d of detalles) {
-            await SaleDetaildb.create({
-                venta: ventaGuardada._id,
-                producto: d.producto,
-                cantidad: d.cantidad,
-                precioUnitario: d.precioUnitario,
-                subtotal: d.subtotal
-            });
-        }
-        res.status(201).send({
-            message: "Venta realizada correctamente",
-            venta: ventaGuardada
+        }], { session });
+
+        // 🧾 CREAR DETALLES EN BLOQUE (MÁS EFICIENTE)
+        const detallesConVenta = detalles.map(d => ({
+            ...d,
+            venta: venta._id
+        }));
+
+        await SaleDetaildb.insertMany(detallesConVenta, { session });
+
+        await session.commitTransaction();
+        session.endSession();
+
+        return res.status(201).send({
+            message: "Venta creada correctamente",
+            venta
         });
 
-    } catch (err) {
-        res.status(500).send({
-            message: "Error al procesar la venta",
-            error: err
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+
+        return res.status(500).send({
+            message: "Error al crear la venta",
+            error: error.message
         });
     }
 };
 
 
 
+// ===============================
+// FIND (SIN N+1 - OPTIMIZADO)
+// ===============================
 exports.find = async (req, res) => {
     try {
+
         const ventas = await Saledb.find()
             .populate("cliente")
             .lean();
-        for (let venta of ventas) {
-            venta.detalles = await SaleDetaildb.find({ venta: venta._id })
-                .populate("producto");
+
+        const ventasIds = ventas.map(v => v._id);
+
+        const detalles = await SaleDetaildb.find({
+            venta: { $in: ventasIds }
+        }).populate("producto").lean();
+
+        // 🔗 MAPEO EFICIENTE
+        const detallesMap = {};
+
+        for (let d of detalles) {
+            if (!detallesMap[d.venta]) {
+                detallesMap[d.venta] = [];
+            }
+            detallesMap[d.venta].push(d);
         }
+
+        for (let v of ventas) {
+            v.detalles = detallesMap[v._id] || [];
+        }
+
         res.send(ventas);
+
+    } catch (error) {
+        res.status(500).send({
+            message: "Error obteniendo ventas",
+            error: error.message
+        });
+    }
+};
+
+
+
+// ===============================
+// DELETE (CON TRANSACCIÓN)
+// ===============================
+exports.delete = async (req, res) => {
+
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const { id } = req.params;
+
+        if (!id) {
+            await session.abortTransaction();
+            return res.status(400).send({
+                message: "ID requerido"
+            });
+        }
+
+        const venta = await Saledb.findById(id).session(session);
+
+        if (!venta) {
+            await session.abortTransaction();
+            return res.status(404).send({
+                message: "Venta no encontrada"
+            });
+        }
+
+        const detalles = await SaleDetaildb.find({ venta: id }).session(session);
+
+        // 🔄 DEVOLVER STOCK (ATÓMICO)
+        for (let d of detalles) {
+            await Productdb.updateOne(
+                { _id: d.producto },
+                { $inc: { stock: d.cantidad } },
+                { session }
+            );
+        }
+
+        await SaleDetaildb.deleteMany({ venta: id }).session(session);
+        await Saledb.findByIdAndDelete(id).session(session);
+
+        await session.commitTransaction();
+        session.endSession();
+
+        res.send({
+            message: "Venta eliminada correctamente"
+        });
+
+    } catch (error) {
+        await session.abortTransaction();
+        session.endSession();
+
+        res.status(500).send({
+            message: "Error eliminando venta",
+            error: error.message
+        });
+    }
+};
+
+exports.findOne = async (req, res) => {
+    try {
+        const venta = await Saledb.findById(req.params.id)
+            .populate("cliente");
+
+        if (!venta) {
+            return res.status(404).send({ message: "Venta no encontrada" });
+        }
+
+        const detalles = await SaleDetaildb.find({ venta: venta._id })
+            .populate("producto");
+
+        res.send({
+            ...venta.toObject(),
+            detalles
+        });
+
     } catch (err) {
         res.status(500).send(err);
     }
 };
 
 
-
-exports.delete = async (req, res) => {
+exports.finalizarVenta = async (req, res) => {
     try {
-        const id = req.params.id;
-        // 🛡️ VALIDACIÓN NUEVA
-        if (!id) {
-            return res.status(400).send({
-                message: "ID de venta no proporcionado"
-            });
-        }
-        const venta = await Saledb.findById(id);
 
-        if (!venta) {
-            return res.status(404).send({
-                message: "Venta no encontrada"
-            });
-        }
-        // buscar detalles de la venta
-        const detalles = await SaleDetaildb.find({ venta: id });
-        // devolver stock a los productos
-        for (let d of detalles) {
-            const producto = await Productdb.findById(d.producto);
-            if (producto) {
-                producto.stock += d.cantidad;
-                await producto.save();
-            }
-        }
+        const { cliente, total } = req.body;
 
-        // eliminar detalles
-        await SaleDetaildb.deleteMany({ venta: id });
-        // eliminar venta
-        await Saledb.findByIdAndDelete(id);
-        res.send({
-            message: "Venta eliminada correctamente"
+        const venta = await Saledb.create({
+            cliente,
+            total,
+            fecha: new Date(),
+            estado: "completada"
         });
+
+        return res.json({
+            ok: true,
+            venta
+        });
+
     } catch (error) {
-        res.status(500).send({
-            message: "Error eliminando la venta",
-            error: error
+        console.error(error);
+        return res.status(500).json({
+            ok: false,
+            msg: "Error al registrar venta"
         });
     }
+};
+
+exports.confirmacion = (req, res) => {
+
+    const cart = req.session.cart || {
+        items: [],
+        total: 0
+    };
+
+    res.render('admin/payment/checkout_confirmation', {
+        user: req.session.user,
+        cart
+    });
 };

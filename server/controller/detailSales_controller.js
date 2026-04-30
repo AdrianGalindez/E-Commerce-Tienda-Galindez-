@@ -1,100 +1,120 @@
+const mongoose = require('mongoose');
 const SaleDetaildb = require('../model/saleDetails');
+const Saledb = require('../model/sales');
+const Productdb = require('../model/product');
 
-// CREATE
+
+// ===============================
+// ❌ CREATE (DESHABILITADO)
+// ===============================
 exports.create = async (req, res) => {
-
-    try {
-
-        const subtotal = req.body.cantidad * req.body.precioUnitario
-
-        const detail = new SaleDetaildb({
-            venta: req.body.venta,
-            producto: req.body.producto,
-            cantidad: req.body.cantidad,
-            precioUnitario: req.body.precioUnitario,
-            subtotal: subtotal
-        });
-
-        const data = await detail.save()
-
-        res.send(data)
-
-    } catch (error) {
-
-        res.status(500).send(error)
-
-    }
-}
+    return res.status(403).send({
+        message: "No permitido. Los detalles se crean junto con la venta."
+    });
+};
 
 
-// FIND
+// ===============================
+// FIND (OPTIMIZADO)
+// ===============================
 exports.find = async (req, res) => {
 
     try {
 
-        const ventaId = req.query.venta
+        const { venta } = req.query;
 
-        const data = await SaleDetaildb.find({ venta: ventaId })
-            .populate('producto')
-            .populate('venta')
-
-        res.send(data)
-
-    } catch (error) {
-
-        res.status(500).send(error)
-
-    }
-}
-
-
-// UPDATE
-exports.update = async (req, res) => {
-
-    try {
-
-        const subtotal = req.body.cantidad * req.body.precioUnitario
-
-        const data = await SaleDetaildb.findByIdAndUpdate(
-            req.params.id,
-            {
-                ...req.body,
-                subtotal: subtotal
-            },
-            { new: true }
-        )
-
-        res.send(data)
-
-    } catch (error) {
-
-        res.status(500).send(error)
-
-    }
-}
-
-
-// DELETE
-
-exports.delete = async (req, res) => {
-
-    try {
-
-        const data = await SaleDetaildb.findByIdAndDelete(req.params.id)
-
-        if (!data) {
-            return res.status(404).send({
-                message: "Detalle no encontrado"
-            })
+        if (!venta) {
+            return res.status(400).send({
+                message: "Debe proporcionar el ID de la venta"
+            });
         }
 
+        const detalles = await SaleDetaildb.find({ venta })
+            .populate('producto')
+            .lean();
+
+        res.send(detalles);
+
+    } catch (error) {
+        res.status(500).send({
+            message: "Error obteniendo detalles",
+            error: error.message
+        });
+    }
+};
+
+
+// ===============================
+// ❌ UPDATE (DESHABILITADO)
+// ===============================
+exports.update = async (req, res) => {
+    return res.status(403).send({
+        message: "No permitido. Modificar detalles rompe la integridad de la venta."
+    });
+};
+
+
+// ===============================
+// DELETE (CON TRANSACCIÓN)
+// ===============================
+exports.delete = async (req, res) => {
+
+    const session = await mongoose.startSession();
+
+    try {
+
+        session.startTransaction();
+
+        const { id } = req.params;
+
+        if (!id) {
+            await session.abortTransaction();
+            return res.status(400).send({
+                message: "ID requerido"
+            });
+        }
+
+        const detalle = await SaleDetaildb.findById(id).session(session);
+
+        if (!detalle) {
+            await session.abortTransaction();
+            return res.status(404).send({
+                message: "Detalle no encontrado"
+            });
+        }
+
+        // 🔄 DEVOLVER STOCK
+        await Productdb.updateOne(
+            { _id: detalle.producto },
+            { $inc: { stock: detalle.cantidad } },
+            { session }
+        );
+
+        // 🔄 ACTUALIZAR TOTAL DE LA VENTA
+        await Saledb.updateOne(
+            { _id: detalle.venta },
+            { $inc: { total: -detalle.subtotal } },
+            { session }
+        );
+
+        // 🗑️ ELIMINAR DETALLE
+        await SaleDetaildb.findByIdAndDelete(id).session(session);
+
+        await session.commitTransaction();
+        session.endSession();
+
         res.send({
-            message: "Detalle de venta eliminado"
-        })
+            message: "Detalle eliminado correctamente"
+        });
 
     } catch (error) {
 
-        res.status(500).send(error)
+        await session.abortTransaction();
+        session.endSession();
 
+        res.status(500).send({
+            message: "Error eliminando detalle",
+            error: error.message
+        });
     }
-}
+};

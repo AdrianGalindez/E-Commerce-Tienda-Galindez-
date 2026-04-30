@@ -1,76 +1,89 @@
 const axios = require('axios');
-// ==================== VENTAS ===========================
-exports.create_sale_form = (req, res) => {
-    // Traemos productos y usuarios para el formulario
-    Promise.all([
-        axios.get('http://localhost:3000/api/productos'),
-        axios.get('http://localhost:3000/api/users')
-    ])
-    .then(([productosRes, usersRes]) => {
-        res.render('create_ventas', { 
-            productos: productosRes.data, 
-            users: usersRes.data 
-        });
-    })
-    .catch(err => res.send(err));
-};
+
+const API = 'http://localhost:3000/api';
 
 
-exports.sales = (req, res) => {
-    axios.get('http://localhost:3000/api/ventas')
-        .then(response => {
-            res.render('read_sales', { sales: response.data });
-        })
-        .catch(err => res.send(err));
-};
-
-
-exports.update_sale = async (req, res) => {
+// ==================== FORM CREAR ====================
+exports.create_sale_form = async (req, res) => {
     try {
-        const response = await axios.get(
-            `http://localhost:3000/api/ventas/${req.query.id}`
-        );
+        const [productos, users] = await Promise.all([
+            axios.get(`${API}/productos`),
+            axios.get(`${API}/users`)
+        ]);
 
-        res.render('update_sale', { sale: response.data });
+        res.render('create_ventas', {
+            productos: productos.data,
+            users: users.data
+        });
 
-    } catch (err) {
-        res.send(err.message);
+    } catch (error) {
+        res.send(error.message);
     }
 };
 
 
-// ================= DETALLE VENTAS ======================
-exports.create_sale_detail_form = (req, res) => {
-    Promise.all([
-        axios.get('http://localhost:3000/api/ventas'),
-        axios.get('http://localhost:3000/api/productos')
-    ])
-    .then(([ventasRes, productosRes]) => {
+// ==================== LISTAR ====================
+exports.sales = async (req, res) => {
+    try {
+        const response = await axios.get(`${API}/ventas`);
 
-        console.log("VENTAS:", ventasRes.data);
-        console.log("PRODUCTOS:", productosRes.data);
-
-        res.render('create_detalleVenta', {
-            ventas: ventasRes.data,
-            productos: productosRes.data
+        res.render('read_sales', {
+            sales: response.data
         });
-    })
-    .catch(err => res.send(err.message));
-};
 
-exports.read_sale_details = (req, res) => {
-    axios.get('http://localhost:3000/api/detalle-ventas')
-        .then(response => {
-            res.render('read_detailsSales', { saleDetails: response.data });
-        })
-        .catch(err => res.send(err));
+    } catch (error) {
+        res.send(error.message);
+    }
 };
 
 
-exports.update_sale_detail = (req, res) => {
-    axios.get('http://localhost:3000/api/detalle-ventas', { params: { id: req.query.id }})
-        .then(response => {
-            res.render('update_saleDetail', { detail: response.data });
-        })
-        .catch(err => res.send(err));
+// ==================== VER 1 ====================
+exports.view_sale = async (req, res) => {
+    try {
+        const response = await axios.get(`${API}/ventas/${req.query.id}`);
+
+        res.render('view_sale', {
+            sale: response.data
+        });
+
+    } catch (error) {
+        res.send(error.message);
+    }
+};
+
+
+
+
+// ==================== DETALLES ====================
+exports.read_sale_details = async (req, res) => {
+    try {
+        const response = await axios.get(`${API}/detalle-ventas`);
+
+        res.render('read_detailsSales', {
+            saleDetails: response.data
+        });
+
+    } catch (error) {
+        res.send(error.message);
+    }
+};
+
+
+exports.finalizarVenta = async (req, res) => {
+
+    try {
+
+        const carrito = req.body.carrito;
+
+        // 🔥 guardar en sesión
+        req.session.cart = {
+            items: carrito,
+            total: carrito.reduce((acc, item) => acc + item.subtotal, 0)
+        };
+
+        res.json({ ok: true });
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 };

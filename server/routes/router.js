@@ -40,6 +40,7 @@ const { isAdmin } = require('../middleware/auth');
 //=======================API USERS====================
 route.post('/api/users', userController.create);
 route.get('/api/users', userController.find);
+route.get("/api/users/search", userController.search);
 route.get('/api/users/:id', userController.find);
 route.put('/api/users/:id', userController.update);
 route.delete('/api/users/:id', userController.delete);
@@ -62,9 +63,9 @@ route.post('/register', authController.register);
 //========================API PRODUCTOS=================
 route.post('/api/productos', upload.array('fotos', 4), productController.create);
 route.get('/api/productos', productController.find);
+route.get('/api/productos/search', productController.searchApi);
 route.put('/api/productos/:id', upload.array('fotos', 4), productController.update);
 route.delete('/api/productos/:id', productController.delete);
-route.get('/api/productos/search', productController.searchApi);
 
 //========================API CATEGORIAS=================
 route.post('/api/categorias', categoryController.create);
@@ -89,9 +90,13 @@ route.delete('/api/proveedores/:id', providerController.delete);
 
 
 //========================API VENTA=================
+console.log("saleController:", saleController);
 route.post('/api/ventas', saleController.create);
 route.get('/api/ventas', saleController.find);
+route.get('/api/ventas/:id', saleController.findOne);
 route.delete('/api/ventas/:id', saleController.delete);
+route.post("/admin/finalizar-venta", saleController.finalizarVenta);
+route.get("/admin/confirmacion", saleController.confirmacion);
 
 
 
@@ -103,9 +108,7 @@ route.delete('/api/roles/:id', rolController.delete);
 
 
 // ======================== API DETALLE VENTAS =====================
-route.post('/api/detalle-ventas', detailSalesController.create);
 route.get('/api/detalle-ventas', detailSalesController.find);
-route.put('/api/detalle-ventas/:id', detailSalesController.update);
 route.delete('/api/detalle-ventas/:id', detailSalesController.delete);
 
 //=========================API REVIEWS=================
@@ -187,16 +190,12 @@ route.post('/update-rol', isAdmin, servicesRenderRol.update_rol);
 route.get('/update-rol', isAdmin, servicesRenderRol.update_rol);
 route.get('/delete-rol/:id', isAdmin, servicesRenderRol.delete_rol);
 
-//=======================VENTAS========================
-route.post('/create-ventas', isAdmin, servicesRenderSales.sales);
-route.get('/create-ventas', isAdmin, servicesRenderSales.sales);
-route.post('/read-ventas', isAdmin, servicesRenderSales.sales);
-route.get('/read-ventas', isAdmin, servicesRenderSales.sales);
-route.post('/update-ventas', isAdmin, servicesRenderSales.sales);
-route.get('/update-ventas', isAdmin, servicesRenderSales.sales);
-route.get('/create-ventas-form', isAdmin, servicesRenderSales.create_sale_form);
-route.get('/create-detalle-venta', isAdmin, servicesRenderSales.create_sale_detail_form);
 
+//=======================VENTAS========================
+route.get('/ventas', isAdmin, servicesRenderSales.sales);
+route.get('/ventas/create', isAdmin, servicesRenderSales.create_sale_form);
+route.get('/ventas/view', isAdmin, servicesRenderSales.view_sale);
+route.get('/ventas/detalles', isAdmin, servicesRenderSales.read_sale_details);
 
 //=======================USUARIOS========================
 route.get('/add-user-form', isAdmin, servicesRenderUser.create_user_form);
