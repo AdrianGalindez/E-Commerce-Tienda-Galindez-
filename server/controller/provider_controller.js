@@ -13,7 +13,8 @@ exports.create = (req,res)=>{
     const provider = new Providerdb({
         nombre : req.body.nombre,
         telefono : req.body.telefono,
-        direccion : req.body.direccion
+        direccion : req.body.direccion,
+        descripcion : req.body.descripcion
     });
 
     provider
@@ -84,7 +85,8 @@ exports.update = async (req, res) => {
             { 
                 nombre: req.body.nombre,
                 telefono: req.body.telefono,
-                direccion: req.body.direccion
+                direccion: req.body.direccion,
+                 descripcion: req.body.descripcion
             },
             { new: true, useFindAndModify: false }
         );

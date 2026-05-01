@@ -7,11 +7,27 @@ var schema = new mongoose.Schema({
         required: true
     },
 
-    telefono: String,
+    contacto: {
+        type: String
+    },
 
-    direccion: String
+    telefono: {
+        type: String
+    },
 
-})
+    email: {
+        type: String
+    },
+
+    direccion: {
+        type: String
+    },
+
+    descripcion: {   
+        type: String
+    }
+
+});
 
 const Providerdb = mongoose.model('providerdb', schema);
 

@@ -46,7 +46,8 @@ exports.update_provider_data = async (req, res) => {
         const body = {
             nombre: req.body.nombre,
             telefono: req.body.telefono,
-            direccion: req.body.direccion
+            direccion: req.body.direccion,
+            descripcion: req.body.descripcion
         };
         await axios.put(`http://localhost:3000/api/proveedores/${id}`, body);
         res.redirect('/read-proveedor'); // redirige a la lista de proveedores
