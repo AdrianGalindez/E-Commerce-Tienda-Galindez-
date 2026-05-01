@@ -61,19 +61,19 @@
 
 /* ===== FIX PARA BOTONES EN CARDS ===== */
 
-.card .btn-primary-action,
+/* .card .btn-primary-action,
 .card .btn-secondary-action {
     width: 100%;
     justify-content: center;
     text-align: center;
-}
+} */
 
 /* evita que el form rompa layout */
-.card form {
+/* .card form {
     flex: 1;
-}
+} */
 
 /* asegura alineación en fila */
-.card-body.d-flex {
+/* .card-body.d-flex {
     align-items: stretch;
-}
+} */
