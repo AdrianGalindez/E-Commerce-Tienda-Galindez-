@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="/css/payment_point.css">
     <link rel="stylesheet" href="/css/detail_products.css">
     <link rel="stylesheet" href="/css/pages/product-detail.css">
-    
+    <link rel="stylesheet" href="css/profile.css">
     <link rel="stylesheet" href="/css/components/product-info.css">
     <link rel="stylesheet" href="/css/components/buttons.css">
     <link rel="stylesheet" href="/css/components/reviews.css">
@@ -72,7 +72,14 @@
 
         <li class="nav-item"><a class="nav-link" href="/promociones"><i class="bi bi-tag"></i> Promociones</a></li>
         <li class="nav-item"><a class="nav-link" href="/marcas"><i class="bi bi-bookmark"></i> Marcas</a></li>
-        <li class="nav-item"><a class="nav-link" href="/carrito"><i class="bi bi-cart"></i> Carrito</a></li>
+        <li class="nav-item"><a class="nav-link position-relative" href="/carrito">
+    <i class="bi bi-cart"></i> Carrito
+<span id="cart-count" class="cart-badge">
+    <%= (typeof cart !== 'undefined' && cart.items) 
+        ? cart.items.reduce((acc, i) => acc + i.cantidad, 0) 
+        : 0 %>
+</span>
+</a></li>
 
       </ul>
 
@@ -105,3 +112,54 @@
   </div>
 </nav>
 </header>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    console.log("🟢 DOM CARGADO");
+
+    document.addEventListener('click', async (e) => {
+
+        const btn = e.target.closest('.add-to-cart-btn');
+
+        if (!btn) return;
+
+        console.log("🟣 CLICK DETECTADO EN BOTÓN");
+
+        const productoId = btn.dataset.id;
+        console.log("🟡 PRODUCTO ID:", productoId);
+
+        try {
+            const res = await fetch('/add-to-carrito', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify({ productoId, cantidad: 1 })
+            });
+
+            console.log("🟢 STATUS:", res.status);
+
+            const data = await res.json();
+            console.log("🟢 DATA:", data);
+
+            if (data.totalItems !== undefined) {
+                const cartCount = document.getElementById('cart-count');
+
+                if (cartCount) {
+                    cartCount.textContent = data.totalItems;
+                    console.log("✅ CONTADOR ACTUALIZADO:", data.totalItems);
+                } else {
+                    console.log("❌ NO EXISTE #cart-count");
+                }
+            }
+
+        } catch (err) {
+            console.error("🔥 ERROR:", err);
+        }
+
+    });
+
+});
+</script>

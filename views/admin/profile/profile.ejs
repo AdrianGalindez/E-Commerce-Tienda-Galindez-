@@ -1,54 +1,105 @@
-<%- include('../include/_header') %>
+<%- include('../../include/_headerAdmin') %>
 
-<div class="container mt-4">
+<link rel="stylesheet" href="/assets/css/profile.css">
 
-    <div class="row">
+<div class="container profile-container">
 
-        <!-- SIDEBAR ADMIN -->
-        <div class="col-md-3">
-            <div class="list-group">
+    <div class="profile-card">
 
-                <a href="/admin/users" class="list-group-item">Usuarios</a>
-                <a href="/admin/products" class="list-group-item">Productos</a>
-                <a href="/admin/orders" class="list-group-item">Pedidos</a>
-
-            </div>
+        <!-- Avatar -->
+        <div class="profile-header text-center">
+            <i class="bi bi-person-circle profile-avatar"></i>
+            <h3 id="nombreText"><%= user.nombre %></h3>
+            <span class="badge bg-dark"><%= user.rol?.nombre || "Usuario" %></span>
         </div>
 
-        <!-- DASHBOARD -->
-        <div class="col-md-9">
+        <!-- BOTONES -->
+        <div class="text-end mb-3">
+            <button id="editBtn" class="btn btn-dark btn-sm">
+                <i class="bi bi-pencil"></i> Editar
+            </button>
+        </div>
 
-            <h3>Panel Admin</h3>
+        <!-- FORM -->
+        <form id="profileForm" action="/api/users/<%= user._id %>" method="POST">
 
-            <div class="row">
+            <input type="hidden" name="_method" value="PUT">
 
-                <div class="col-md-4">
-                    <div class="card p-3">
-                        <h5>Usuarios</h5>
-                        <p>Total registrados</p>
-                    </div>
+            <div class="profile-info">
+
+                <div class="info-item">
+                    <span>Nombre</span>
+                    <p class="view"><%= user.nombre %></p>
+                    <input class="form-control edit d-none" name="nombre" value="<%= user.nombre %>">
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card p-3">
-                        <h5>Productos</h5>
-                        <p>En catálogo</p>
-                    </div>
+                <div class="info-item">
+                    <span>Email</span>
+                    <p><%= user.email %></p>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card p-3">
-                        <h5>Ventas</h5>
-                        <p>Resumen general</p>
-                    </div>
+                <div class="info-item">
+                    <span>Teléfono</span>
+                    <p class="view"><%= user.telefono %></p>
+                    <input class="form-control edit d-none" name="telefono" value="<%= user.telefono %>">
+                </div>
+
+                <div class="info-item">
+                    <span>Dirección</span>
+                    <p class="view"><%= user.direccion %></p>
+                    <input class="form-control edit d-none" name="direccion" value="<%= user.direccion %>">
+                </div>
+
+                <div class="info-item">
+                    <span>Ciudad</span>
+                    <p class="view"><%= user.ciudad %></p>
+                    <input class="form-control edit d-none" name="ciudad" value="<%= user.ciudad %>">
+                </div>
+
+                <div class="info-item">
+                    <span>Barrio</span>
+                    <p class="view"><%= user.barrio %></p>
+                    <input class="form-control edit d-none" name="barrio" value="<%= user.barrio %>">
                 </div>
 
             </div>
 
-        </div>
+            <!-- BOTONES GUARDAR -->
+            <div class="text-end mt-3 d-none" id="saveSection">
+                <button type="submit" class="btn btn-success btn-sm">
+                    Guardar cambios
+                </button>
+                <button type="button" id="cancelBtn" class="btn btn-secondary btn-sm">
+                    Cancelar
+                </button>
+            </div>
+
+        </form>
 
     </div>
 
 </div>
 
-<%- include('../include/_footer') %>
+<script>
+    const editBtn = document.getElementById('editBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const edits = document.querySelectorAll('.edit');
+    const views = document.querySelectorAll('.view');
+    const saveSection = document.getElementById('saveSection');
+
+    editBtn.addEventListener('click', () => {
+        edits.forEach(e => e.classList.remove('d-none'));
+        views.forEach(v => v.classList.add('d-none'));
+        saveSection.classList.remove('d-none');
+        editBtn.classList.add('d-none');
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        edits.forEach(e => e.classList.add('d-none'));
+        views.forEach(v => v.classList.remove('d-none'));
+        saveSection.classList.add('d-none');
+        editBtn.classList.remove('d-none');
+    });
+</script>
+
+<%- include('../../include/_footerAdmin') %>
