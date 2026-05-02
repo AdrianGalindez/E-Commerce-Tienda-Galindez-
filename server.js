@@ -15,6 +15,21 @@ const app = express();
 app.use(sessionConfig);
 app.use(express.json());
 app.use(methodOverride('_method'));
+
+// MIDDLEWARE GLOBAL DEL CARRITO
+app.use((req, res, next) => {
+
+    if (!req.session.cart) {
+        req.session.cart = { items: [], total: 0 };
+    }
+
+    res.locals.cart = req.session.cart;
+
+    console.log("🧠 CART EN VISTAS:", res.locals.cart);
+
+    next();
+});
+
 app.use((req, res, next) => {
     console.log("🍪 SESSION ID GLOBAL:", req.sessionID);
     console.log("🍪 CART GLOBAL:", req.session.cart);
