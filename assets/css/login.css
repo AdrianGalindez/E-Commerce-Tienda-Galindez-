@@ -131,7 +131,7 @@ h3 {
 
 /* IMAGEN */
 .illustration img {
-    width: 300px;
+    width: 600px;
     animation: float 3s ease-in-out infinite;
 }
 

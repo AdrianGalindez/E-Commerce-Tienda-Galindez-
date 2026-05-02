@@ -167,3 +167,21 @@
         grid-template-columns: 1fr;
     }
 }
+
+
+.add-to-cart-btn {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.add-to-cart-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+/* estado activo */
+.added {
+    background-color: #28a745 !important;
+    color: white;
+}
