@@ -35,7 +35,18 @@
         <!-- Precio venta -->
         <div class="form-group">
           <label>Precio de venta</label>
-          <input type="number" step="0.01" name="precio" required>
+          <input type="number" step="0.01" name="precioBase" required>
+        </div>
+
+        <!-- Unidad Base 🔥 -->
+        <div class="form-group">
+          <label>Unidad base</label>
+          <select name="unidadBase" required>
+            <option value="">Seleccione una unidad</option>
+            <% unidades.forEach(u => { %>
+              <option value="<%= u._id %>"><%= u.nombre %></option>
+            <% }) %>
+          </select>
         </div>
 
         <!-- Stock -->
@@ -85,6 +96,20 @@
 
       </div>
 
+      <!-- 🔥 PRESENTACIONES -->
+      <div class="form-group full">
+        <label>Precios por presentación</label>
+
+        <div id="presentaciones-container"></div>
+
+        <button type="button" onclick="agregarPresentacion()">
+          + Agregar presentación
+        </button>
+      </div>
+
+      <!-- INPUT OCULTO -->
+      <input type="hidden" name="presentaciones" id="presentacionesInput">
+
       <!-- BOTÓN -->
       <div class="form-actions">
         <button type="submit">Crear Producto</button>
@@ -94,5 +119,54 @@
 
   </div>
 </div>
+
+<!-- 🔥 SCRIPT -->
+<script>
+let contador = 0;
+
+function agregarPresentacion() {
+  const container = document.getElementById('presentaciones-container');
+
+  const div = document.createElement('div');
+  div.classList.add('presentacion-item');
+  div.style.marginBottom = "10px";
+
+  div.innerHTML = `
+    <select class="unidad" required>
+      <option value="">Unidad</option>
+      <% unidades.forEach(u => { %>
+        <option value="<%= u._id %>"><%= u.nombre %></option>
+      <% }) %>
+    </select>
+
+    <input type="number" class="precio" placeholder="Precio" step="0.01" required>
+
+    <button type="button" onclick="this.parentElement.remove()">X</button>
+  `;
+
+  container.appendChild(div);
+}
+
+document.querySelector('.product-form').addEventListener('submit', function () {
+
+  const items = document.querySelectorAll('.presentacion-item');
+
+  const data = [];
+
+  items.forEach(item => {
+    const unidad = item.querySelector('.unidad').value;
+    const precio = item.querySelector('.precio').value;
+
+    if (unidad && precio) {
+      data.push({
+        unidad,
+        precio: Number(precio)
+      });
+    }
+  });
+
+  document.getElementById('presentacionesInput').value = JSON.stringify(data);
+});
+</script>
 
 <%- include('../../include/_footerAdmin') %>
