@@ -14,7 +14,7 @@ router.post('/add', isLogged, cartController.add_to_carrito);
 router.post('/remove', isLogged, cartController.remove_from_carrito);
 
 // checkout
-router.post('/checkout', isLogged, cartController.checkout);
-router.get('/checkout/confirmacion/:id', isLogged, cartController.confirmacion);
+// router.post('/checkout', isLogged, cartController.checkout);
+// router.get('/checkout/confirmacion/:id', isLogged, cartController.confirmacion);
 
 module.exports = router;

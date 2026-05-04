@@ -62,13 +62,13 @@ exports.checkout = async (req, res) => {
                 return res.status(400).send(`Stock insuficiente para ${productoDB.nombre}`);
             }
 
-            const subtotal = productoDB.precio * cantidad;
+            const subtotal = productoDB.precioBase * cantidad;
             total += subtotal;
 
             detalles.push({
                 producto: productoDB._id,
                 cantidad,
-                precioUnitario: productoDB.precio,
+                precioUnitario: productoDB.precioBase,
                 subtotal
             });
 
@@ -122,7 +122,7 @@ exports.confirmacion = async (req, res) => {
         const cart = {
             items: detalles.map(d => ({
                 nombre: d.producto.nombre,
-                precio: d.precio,
+                precio: d.precioUnitario,
                 cantidad: d.cantidad
             })),
             total: venta.total
@@ -133,7 +133,7 @@ exports.confirmacion = async (req, res) => {
             cart: {
                 items: detalles.map(d => ({
                     nombre: d.producto.nombre,
-                    precio: d.precio,
+                    precio: d.precioUnitario,
                     cantidad: d.cantidad
                 })),
                 total: venta.total
@@ -162,6 +162,9 @@ exports.add_to_carrito = async (req, res) => {
         const { productoId, cantidad } = req.body;
         if (!userId) return res.redirect('/login');
         const producto = await Productdb.findById(productoId);
+        console.log("🧪 PRODUCTO DESDE BD:", producto);
+        console.log("💰 precioBase:", producto?.precioBase);
+        console.log("📦 cantidad:", cantidad);
         if (!producto) {
             return res.status(404).send("Producto no encontrado");
         }
@@ -173,27 +176,33 @@ exports.add_to_carrito = async (req, res) => {
         );
         if (item) {
             item.cantidad += cant;
-            item.subtotal = item.cantidad * item.precio;
+            item.subtotal = item.cantidad * item.precioBase;
         } else {
             cart.items.push({
                 productoId: producto._id.toString(),
                 nombre: producto.nombre,
-                precio: producto.precio,
+                precio: producto.precioBase,
                 cantidad: cant,
-                subtotal: producto.precio * cant,
-                foto: producto.foto
+                subtotal: producto.precioBase * cant,
+                foto: producto.fotos?.[0] || null
             });
         }
-        cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
-        req.session.cart = cart;
-        req.session.save(); // 👈 IMPORTANTE
+        cart.total = cart.items.reduce((acc, i) => {
+            return acc + (Number(i.subtotal) || 0);
+        }, 0);
         const totalItems = cart.items.reduce((acc, i) => acc + i.cantidad, 0);
 
-        return res.json({ 
-            success: true,
-            totalItems 
-        });
+        req.session.cart = cart;
 
+        req.session.save(err => {
+            if (err) console.error(err);
+        
+            return res.json({ 
+                success: true,
+                totalItems 
+            });
+        });
+        
     } catch (err) {
         console.error(err);
         res.status(500).send(err.message);
@@ -207,10 +216,13 @@ exports.car = async (req, res) => {
             items: [],
             total: 0
         };
+        const subtotal = Number(cart.total) || 0;
+
         res.render('client/cart/cart', {
             productosCarrito: cart.items,
-            subtotal: cart.total
+            subtotal
         });
+
     } catch (err) {
         console.error(err);
         res.status(500).send(err.message);
@@ -225,7 +237,9 @@ exports.remove_from_carrito = (req, res) => {
         cart.items = cart.items.filter(
             i => i.productoId !== productoId
         );
-        cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
+        cart.total = cart.items.reduce((acc, i) => {
+            return acc + (Number(i.subtotal) || 0);
+        }, 0);
         req.session.cart = cart;
         res.redirect('/carrito');
     } catch (err) {
@@ -244,9 +258,11 @@ exports.update_carrito = async (req, res) => {
             const cant = Math.max(1, parseInt(cantidad));
             item.cantidad = cant;
             const producto = await Productdb.findById(item.productoId);
-            item.subtotal = producto.precio * cant;
+            item.subtotal = producto.precioBase * cant;
         }
-        cart.total = cart.items.reduce((acc, i) => acc + i.subtotal, 0);
+        cart.total = cart.items.reduce((acc, i) => {
+            return acc + (Number(i.subtotal) || 0);
+        }, 0);
         req.session.cart = cart;
         res.redirect('/carrito');
     } catch (err) {
