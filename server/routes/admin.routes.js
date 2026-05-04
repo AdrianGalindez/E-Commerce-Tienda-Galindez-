@@ -13,6 +13,7 @@ const servicesRenderPaymentPoint = require('../services/RenderPaymentPoint');
 const servicesRenderAdminAnalytics = require('../services/renderAdminAnalytics');
 const servicesRenderBrand = require('../services/renderBrands');
 const brandController = require('../controller/brand_controller');
+const saleController = require('../controller/sale_controller');
 const upload = require('../middleware/upload');
 
 // ejemplo (puedes seguir agregando igual)
@@ -29,6 +30,7 @@ router.get('/create-producto', isAdmin, servicesRenderProduct.create_product_for
 router.get('/delete-producto/:id', isAdmin, servicesRenderProduct.delete_product);
 
 router.get('/billing-point', isAdmin, servicesRenderPaymentPoint.billing_point);
+router.post('/billing-point', isAdmin, servicesRenderPaymentPoint.billing_point);
 router.get('/admin-analytics', isAdmin, servicesRenderAdminAnalytics.renderAdminAnalytics);
 
 router.get('/create-marca', isAdmin, servicesRenderBrand.create_brand_form);
@@ -67,5 +69,8 @@ router.get('/read-user', isAdmin, servicesRenderUser.read_users);
 router.post('/update-user', isAdmin, servicesRenderUser.update_user);
 router.get('/update-user', isAdmin, servicesRenderUser.update_user);
 router.get('/delete-user/:id', isAdmin, servicesRenderUser.delete_user);
+
+router.post("/admin/finalizar-venta", saleController.finalizarVenta);
+router.get("/admin/confirmacion", saleController.confirmacion);
 
 module.exports = router;

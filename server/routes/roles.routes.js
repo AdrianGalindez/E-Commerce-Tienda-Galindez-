@@ -3,7 +3,6 @@ const router = express.Router();
 
 const rolController = require('../controller/rol_controller');
 
-// ✅ SIN repetir prefijo
 router.post('/', rolController.create);
 router.get('/', rolController.find);
 router.get('/:id', rolController.find);
