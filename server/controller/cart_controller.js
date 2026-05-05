@@ -90,7 +90,10 @@ exports.checkout = async (req, res) => {
 
         req.session.cart = { items: [], total: 0 };
 
-        return res.redirect(`/checkout/confirmacion/${venta._id}`);
+        return res.json({
+            success: true,
+            ventaId: venta._id
+        });
 
     } catch (err) {
         console.error("CHECKOUT ERROR:", err);
@@ -160,7 +163,12 @@ exports.add_to_carrito = async (req, res) => {
         console.log("🟣 [ADD CART] CART INICIAL:", req.session.cart);
         const userId = req.session.user?._id;
         const { productoId, cantidad } = req.body;
-        if (!userId) return res.redirect('/login');
+        if (!userId) {
+            return res.status(401).json({
+                success: false,
+                message: "No autenticado"
+            });
+        }
         const producto = await Productdb.findById(productoId);
         console.log("🧪 PRODUCTO DESDE BD:", producto);
         console.log("💰 precioBase:", producto?.precioBase);
@@ -176,7 +184,7 @@ exports.add_to_carrito = async (req, res) => {
         );
         if (item) {
             item.cantidad += cant;
-            item.subtotal = item.cantidad * item.precioBase;
+            item.subtotal = item.cantidad * item.precio; // ✅ CORRECTO
         } else {
             cart.items.push({
                 productoId: producto._id.toString(),

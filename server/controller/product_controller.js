@@ -225,30 +225,30 @@ exports.delete = async (req, res) => {
 
 exports.searchApi = async (req, res) => {
     try {
-        console.log("QUERY:", req.query);
         const search = req.query.search;
 
-        // 🔒 VALIDACIÓN
         if (!search || search.trim().length < 2) {
             return res.status(400).send({
                 message: "Mínimo 2 caracteres para buscar"
             });
         }
 
-        // 🔥 QUERY OPTIMIZADO
         const productos = await Productdb.find({
             nombre: { $regex: search, $options: 'i' },
             stock: { $gt: 0 }
         })
-        .select('nombre precioBase stock unidadBase') // 👈 agregas unidadBase
-        .populate('unidadBase') // 👈 aquí
+        .select('nombre precioBase stock unidadBase')
+        .populate('unidadBase')
         .limit(10)
         .lean();
 
-        res.send(productos);
+        // 🔥 AQUÍ ESTÁ LA MAGIA
+        res.send(productos.map(p => ({
+            ...p,
+            precio: p.precioBase
+        })));
 
     } catch (err) {
-
         console.error("ERROR SEARCH API:", err);
 
         res.status(500).send({

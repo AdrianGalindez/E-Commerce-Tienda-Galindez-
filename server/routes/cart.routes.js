@@ -13,8 +13,10 @@ router.post('/eliminar', isLogged, cartController.remove_from_carrito);
 router.post('/add', isLogged, cartController.add_to_carrito);
 router.post('/remove', isLogged, cartController.remove_from_carrito);
 
+router.get('/data', (req, res) => {
+    res.json(req.session.cart || { items: [], total: 0 });
+});
 // checkout
-// router.post('/checkout', isLogged, cartController.checkout);
-// router.get('/checkout/confirmacion/:id', isLogged, cartController.confirmacion);
-
+router.post('/checkout', isLogged, cartController.checkout);
+router.get('/checkout/confirmacion/:id', isLogged, cartController.confirmacion);
 module.exports = router;

@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { isLogged } = require('../middleware/auth');
 
 const { isAdmin } = require('../middleware/auth');
 
@@ -14,6 +15,7 @@ const servicesRenderAdminAnalytics = require('../services/renderAdminAnalytics')
 const servicesRenderBrand = require('../services/renderBrands');
 const brandController = require('../controller/brand_controller');
 const saleController = require('../controller/sale_controller');
+const cartController = require('../controller/cart_controller');
 const upload = require('../middleware/upload');
 
 // ejemplo (puedes seguir agregando igual)
@@ -72,5 +74,8 @@ router.get('/delete-user/:id', isAdmin, servicesRenderUser.delete_user);
 
 router.post("/admin/finalizar-venta", saleController.finalizarVenta);
 router.get("/admin/confirmacion", saleController.confirmacion);
+
+// router.post('/checkout', isLogged, cartController.checkout);
+// router.get('/checkout/confirmacion/:id', isLogged, cartController.confirmacion);
 
 module.exports = router;

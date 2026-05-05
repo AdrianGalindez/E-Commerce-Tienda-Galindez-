@@ -16,3 +16,5 @@ exports.billing_point = (req, res) => {
         user: req.session.user
     });
 }
+
+
